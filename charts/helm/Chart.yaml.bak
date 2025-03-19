@@ -1,0 +1,62 @@
+# This file is part of the Confixa Helm chart.
+# Copyright (c) 2024 Wohlig Transformation Pvt. Ltd.
+# Licensed under the Private Use License for Helm Charts.
+# For terms, see the LICENSE file in the repository or contact contact@confixa.com.
+
+apiVersion: v2
+name: Confixa
+description: A Helm chart that deploys confixa-with-microservices-and-dependencies
+version: 0.8.2
+appVersion: 0.8.2
+home: https://confixa.com
+icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
+dependencies:
+  # - name: kubernetes-dashboard
+  #   version: "7.5.0"
+  #   repository: https://kubernetes.github.io/dashboard/
+  #   alias: kubernetesdashboard
+  #   condition: kubernetesdashboard.enable
+  - alias: redis
+    name: redis
+    version: "20.2.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enable
+  - alias: rabbitmq
+    name: rabbitmq
+    version: "14.1.4"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: rabbitmq.enable
+  - alias: mongodb
+    name: mongodb
+    version: "16.0.3"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: mongodb.enable
+  - alias: argocd
+    name: argo-cd
+    version: "7.0.20"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: argocd.enable
+  - alias: kubecost
+    name: cost-analyzer
+    version: "2.5.2-rc.2"
+    repository: "https://kubecost.github.io/cost-analyzer"
+    condition: kubecost.enable
+  - alias: uptimekuma
+    name: uptime-kuma
+    version: "2.21.1"
+    repository: "https://dirsigler.github.io/uptime-kuma-helm"
+    condition: uptimekuma.enable
+  - alias: contour
+    name: contour
+    version: "19.4.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: contour.enable
+  - alias: oauth2proxy
+    repository: https://oauth2-proxy.github.io/manifests
+    name: oauth2-proxy
+    version: "7.9.2"
+    condition: oauth2proxy.enable
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Bump confixa to 0.0.1

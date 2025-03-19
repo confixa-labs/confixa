@@ -1,0 +1,8 @@
+.vscode
+.idea
+.DS_Store
+
+### Helm ###
+**/charts/confixa/charts/*.tgz
+
+*.local.md

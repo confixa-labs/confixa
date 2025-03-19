@@ -1,0 +1,14 @@
+{{- if .Values.llmKumaApiGateway.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.llmKumaApiGateway.name }}
+spec:
+  selector:
+    app: {{ .Values.llmKumaApiGateway.name }}
+  ports:
+    - protocol: {{ .Values.llmKumaApiGateway.service.protocol }}
+      port: {{ .Values.llmKumaApiGateway.service.port }}
+      targetPort: {{ .Values.llmKumaApiGateway.service.targetPort }}
+  type: {{ .Values.llmKumaApiGateway.service.type }}
+{{- end }}

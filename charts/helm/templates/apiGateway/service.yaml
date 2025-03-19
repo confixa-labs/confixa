@@ -1,0 +1,14 @@
+{{- if .Values.apiGateway.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.apiGateway.name }}
+spec:
+  selector:
+    app: {{ .Values.apiGateway.name }}
+  ports:
+    - protocol: {{ .Values.apiGateway.service.protocol }}
+      port: {{ .Values.apiGateway.service.port }}
+      targetPort: {{ .Values.apiGateway.service.targetPort }}
+  type: {{ .Values.apiGateway.service.type }}
+{{- end }}

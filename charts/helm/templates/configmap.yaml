@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.commonConfigMap }}
+data:
+  APP_NAME: 'confixa backend'
+  NODE_ENV: 'production'
+  ADD_BASEURL_PREFIX: 'true'
+  BASE_URL: ''
+  PORT: '3000'
+  PYTHON_PORT: '5050'
+  FLASK_ENV: 'production'
+
+  # REDIS
+  REDIS_INIT: 'true'
+  REDIS_PORT: '6379'
+  REDIS_DB: ''
+  
+  # SECURITY
+  
+  # Keycloak
+  keyCloakInit: 'true'
+  JWTALGO: 'RS256'
+  JWTPUBLICKEY: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwUVLyJSM0x0SFvqw6aifuZqXMlKrSBb7GBJ7hc+sddSlDn38Kkn1m6MWMVoJcGvE/ztynMmUEHOadTNxP9+/xIo2+UUlXVRiAbCvZiZwJ10IW1uDZwmwdgXGbg3RWin2SilkfGXeHB4UCWndCN+OPHiJVT6rq6t9aGjk0IeGY4prSrgn4zrO220EKLPnNYC71/rWWSYhb1ZauUuA0nQvjkbJuxiSI2Y2xG9FVROySA6ocQHD/y9zTAObmsB+NMZPx4tsxzZpNkrI2eI3PZ+uOtomKWyu2QtirmlFtkFt1Hs1aM67ta3tZti2Gwm86+j0XkB3g58SfryQbpHyHr1+1wIDAQAB'
+  # AUTHENTICATION_JWT_SECRET_KEY : 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwUVLyJSM0x0SFvqw6aifuZqXMlKrSBb7GBJ7hc+sddSlDn38Kkn1m6MWMVoJcGvE/ztynMmUEHOadTNxP9+/xIo2+UUlXVRiAbCvZiZwJ10IW1uDZwmwdgXGbg3RWin2SilkfGXeHB4UCWndCN+OPHiJVT6rq6t9aGjk0IeGY4prSrgn4zrO220EKLPnNYC71/rWWSYhb1ZauUuA0nQvjkbJuxiSI2Y2xG9FVROySA6ocQHD/y9zTAObmsB+NMZPx4tsxzZpNkrI2eI3PZ+uOtomKWyu2QtirmlFtkFt1Hs1aM67ta3tZti2Gwm86+j0XkB3g58SfryQbpHyHr1+1wIDAQAB'
+
+  # Signin Flow
+  AUTHENTICATION_INTERNAL_ALLOW: 'true'
+  JWTALGORITHM: 'HS256'
+  AUTHENTICATION_JWT_SECRET_KEY: 'jknaj78d29gy3ubr21309ipihuqwd'
+  JWT_EXPIRY_IN_SECONDS: '86400000'
+  VALIDATION_SECRET: 'WohligFramework'
+
+  # KEYCLOAK
+  keycloakUrl: 'https://sso-dev.confixa.com'
+  keyCloakRealm: 'confixa-dev'
+  keyCloakClient: 'frontend'
+  keyCloakClientSecret: 'JaIgT9q8fGUMghc4YHLP1zpEVOltu6fy'
+  keyCloakRedirectUrl: 'https://frontend.confixa.com/'
+  keyCloakRedirectPathname: 'sign-in'
+  
+  # OPEN AI
+  GPT_MODEL_NAME: 'gpt-4-0125-preview'
+
+  # MONGODB
+  MONGO_INIT: 'true'
+  
+  # RABBITMQ
+  TASK_ID: "c1"
+  ACK_TASK_ID: "ca1"
+  WORKER_TYPE: "consumer"
+  RABBITMQ_INIT : 'true'
+  RABBITMQ_PROTOCOL : "amqp"
+  RABBITMQ_USER : "admin"
+  RABBITMQ_PORT : '5672'
+  RABBITMQ_VHOST : "/"
+
+  # ARGOCD
+  ARGOCD_USERNAME : "admin"
+  # GitHub
+  # CONFIXA_ARGO_APP_NAME : "confixa"
+  # BitBucket
+  # CONFIXA_ARGO_APP_NAME : "confixa1"
+
+  CONFIXA_GITOPS_REPO_NAME : "confixa/confixa-gitops"
+  # GitHub
+  # CONFIXA_GITOPS_REPO_NAME : "confixa/confixa-gitops"
+  # BitBucket
+  # CONFIXA_GITOPS_REPO_NAME : "confixa-gitops"
+  CONFIXA_BRANCH_NAME : "confixa-gitops"
+  
+  # MONITORING
+  # GCP
+  MONITORING_URL : 'https://monitoring.googleapis.com/v3/'
+  MONITORING_DURATION : 7d
+  MONITORING_SVC_ACC_KEY : '{}'
+  MONITORING_SCOPE : 'https://www.googleapis.com/auth/cloud-platform'
+  GCP_PROJECT : 'confixa-rnd'
+
+  # # KUBERNETES DASHBOARD
+  # KUBERNETES_DASHBOARD_URL : 'https://cluster-dashboard.confixa.com'
+  # KUBERNETES_TOKEN : eyJhbGciOiJSUzI1NiIsImtpZCI6IlAwejZGLXpYNDlDQnRPUzRmQldmb01hOFRWMTFzM1pLQUhDd1l4SjNVSjgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJkMGZlMDliYS1hMDUwLTQzZDctOGE5MS0xYzQ0MTNjYzVjNGEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.njtychTS1b1LWcBQyhW7zRF2OGvpdY-nfZGC0uefpvEt-3FBPvAzQ7VX6ldZJgQhhGW4e-8AMeT9Ax3t10kmwITmeaemyvAa_hHEWNi9xu08Ycvy794fgObdLCCv6EGEEKl-5AZkKHEKaXKWCgv4TixeA0Hi5M5hNVg7NGwIBBpf7-1RM1PUr1lpVYNPRCRdC2Ak07CejA8-sPRnGfQltOeP3Vfyej0FdJlPu6C_BXyJ6_mU52PmRJZ7iuE2SsekqzCXemlpwmBObIPk2LXuz--kyBnndSz1qtVXPfX4iuOiUOfOU5YJ1YBrG5H8AHtjjll07eSj1Q_eVz_dQsO5Ug
+  
+  # HELM VERSION
+  ARTIFACT_HUB_URL : 'https://artifacthub.io/api/v1/packages/helm/bitnami'
+  
+  # MICROSERVICE URL
+  FRONTEND_URL: 'https://frontend.confixa.com'
+  BACKEND_URL: 'https://api.confixa.com'
+  CONFIXA_API_URL: 'https://api.confixa.com'
+  CONFIXA_GITHUB_API_URL: 'https://api.confixa.com'
+  CONFIXA_ARGO_API_URL: 'https://api.confixa.com'
+  CONFIXA_ARGO_API_DOMAIN_BASED_URL: 'https://api.confixa.com'
+  CONFIXA_LLM_KUMA_URL: 'https://api.confixa.com'
+  CONFIXA_LLM_KUMA_FLASK_PATHNAME: 'getLLMResponse'
+  CONFIXA_KUBE_COST_API_URL: 'https://kubecost.confixa.com'
+  ARGOCD_URL: 'https://argocd.confixa.com'
+
+  # ARTIFACT
+  ARTIFACT_NAMESPACE: 'backend'
+  ARTIFACT_SECRET_NAME: 'artifact'
+  
+  # VERBIAGE TEXT
+  WORKFLOW_MESSAGE: 'Workflow automation enabled through Confixa.'
+
+  # UPTIME KUMA
+  UPTIME_KUMA_RETRY_INTERVAL: '300'
+  UPTIME_KUMA_MAX_RETRIES: '100000'
+
+  # APM
+  APM_ENABLE: 'false'
+
+  CRYPTO_KEY: '6DfZT3zguFwYFSuUGnJLV5ObZ3exiXsA'
+  
+  # GITHUB JOB RUNS ON
+  JOB_RUNS_ON_TYPE: 'ubuntu'
+  JOB_RUNS_ON_VERSION: '24.04'
+
+  # TOOLS HANDLING ON/OFF
+  HEALTH_CHECK_ENABLED: "true"
+  DASHBOARD_ENABLED: "true"
+  COST_MONITORING_ENABLED: "true"
+  
+  # DEBUG FOR PYTHON
+  PYTHON_DEBUGGER: 'false'

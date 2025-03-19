@@ -1,0 +1,32 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: confixa-cluster-admin-role
+rules:
+- apiGroups: [""]
+  resources: ["secrets", "configmaps", "namespaces", "services", "serviceaccounts", "persistentvolumes", "persistentvolumeclaims"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["clusterrolebindings", "clusterroles", "roles", "rolebindings"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "escalate", "bind", "delete"]
+
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies", "ingressclasses"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "escalate", "bind", "delete"]
+
+- apiGroups: ["policy"]
+  resources: ["poddisruptionbudgets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "escalate", "bind", "delete"]
+
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "escalate", "bind", "delete"]

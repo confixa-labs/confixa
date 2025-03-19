@@ -1,0 +1,7 @@
+{{- if .Values.kubernetesdashboard.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.kubernetesdashboard.configMapRef }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}

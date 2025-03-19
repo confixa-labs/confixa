@@ -1,0 +1,192 @@
+# REQUIRED DEPENDENCIES VALUES DO NOT REMOVE
+redis:
+  enable: true
+  auth:
+    enabled: true
+    existingSecret: "redis-password-secret"
+  service:
+    name: "confixa-redis-master"
+  master:
+    nodeSelector: {}
+  replica:
+    replicaCount: 1
+    nodeSelector: {}
+rabbitmq:
+  enable: true
+  service:
+    name: "confixa-rabbitmq"
+  auth:
+    username: admin
+    existingPasswordSecret: "rabbitmq-password-secret"
+mongodb:
+  enable: true
+  name: "confixa-mongodb"
+  containerName: "confixa-mongodb"
+  image:
+    repository: mongo
+    tag: "8.0.5" # Supports both x86_64 and ARM64
+    pullPolicy: IfNotPresent
+  service:
+    name: "confixa-mongodb"
+    type: ClusterIP
+    port: 27017
+  auth:
+    rootUser: root
+    rootDatabase: "confixa"
+    usernames: ["confixa-admin"]
+    passwords: ["Sm2dnl23dwe7lerPDD"]
+    databases: ["confixa"]
+  persistence:
+    enabled: true
+    size: 8Gi
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+argocd:
+  enable: false
+  redis:
+    enabled: false # Disable the built-in Redis
+  ## Set external Redis configuration
+  externalRedis:
+    host: "confixa-redis-master" # Change this to match your Redis Service name
+    port: 6379
+    existingSecret: "redis-password-secret" # Kubernetes Secret that stores the Redis password
+    existingSecretPasswordKey: "redis-password" # Key in the secret that holds the password
+kubernetesdashboard:
+  enable: false
+  metricsScraper:
+    enable: false
+    name: dashboard-metrics-scraper
+    containerName: dashboard-metrics-scraper
+    service:
+      port: 8000
+      targetPort: 8000
+  name: kubernetes-dashboard
+  containerName: kubernetes-dashboard
+  kong:
+    deployment:
+      name: admin-user
+      automountServiceAccountToken: true
+    env:
+      ADMIN_LISTEN: off
+      PROXY_LISTEN: |
+        0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2
+        ssl
+      PORT_MAPS: 80:8000, 443:8443
+    proxy:
+      type: ClusterIP
+      http:
+        enabled: true
+  service:
+    port: 80
+    targetPort: 9090
+  serviceAccount:
+    adminServiceAccountRef: admin-user
+  secret:
+    tokenSecretRef: admin-user-token
+    csrfSecretRef: kubernetes-dashboard-csrf
+    certsSecretRef: kubernetes-dashboard-certs
+  configMapRef: kubernetes-dashboard-settings
+kubecost:
+  enable: false
+  # kubecostToken: Add the Token for Enterprise users
+uptimekuma:
+  enable: false
+  username: "system-health"
+  password: "SystemHealth123!@#"
+  service:
+    name: "confixa-uptimekuma"
+contour:
+  enable: false
+oauth2proxy:
+  enable: false
+# REQUIRED DEPENDENCIES VALUES ENDS HERE
+appName: confixa
+commonConfigMap: confixa-configmap
+passwordSecretsManagerName: confixa-passwords-secret
+passwordRedisSecretsManagerName: redis-password-secret
+passwordRabbitMQSecretsManagerName: rabbitmq-password-secret
+apiGateway:
+  enable: false
+  name: confixa-api
+  containerName: confixa-api
+  cronName: confixa-api-cron
+  cronContainerName: confixa-api-cron
+  image:
+    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
+    tag: sha-24944501ae09b6d4dd472fff1a606385fc5f7015
+    pullPolicy: Always
+  annotations:
+    git: https://github.com/confixa/confixa-gitops.git
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  ports:
+    containerPort: 3000
+    protocol: TCP
+  configMapRef: confixa-api
+  service:
+    protocol: TCP
+    port: 80
+    targetPort: 3000
+    type: ClusterIP
+llmKumaApiGateway:
+  enable: false
+  name: confixa-llm-kuma-api
+  containerName: confixa-llm-kuma-api
+  image:
+    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma
+    tag: 8d2c2284247a38a96c85792ed190c92ce4f7f8e6
+    pullPolicy: Always
+  annotations:
+    git: https://github.com/confixa/confixa-gitops.git
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  ports:
+    containerPort: 5050
+    protocol: TCP
+  configMapRef: confixa-llm-kuma-api
+  service:
+    protocol: TCP
+    port: 80
+    targetPort: 5050
+    type: ClusterIP
+frontend:
+  enable: false
+  name: confixa-frontend
+  containerName: confixa-frontend
+  image:
+    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
+    tag: 25b75203f636631c1eba55fd5a14e94bc85f638c
+    pullPolicy: Always
+  annotations:
+    git: https://github.com/confixa/confixa-gitops.git
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  ports:
+    containerPort: 3001
+    protocol: TCP
+  configMapRef: confixa-frontend
+  service:
+    protocol: TCP
+    port: 80
+    targetPort: 3001
+    type: ClusterIP

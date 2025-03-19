@@ -1,0 +1,52 @@
+{{- if .Values.llmKumaApiGateway.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.llmKumaApiGateway.name }}
+  annotations:
+    {{- toYaml .Values.llmKumaApiGateway.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.llmKumaApiGateway.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.llmKumaApiGateway.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.llmKumaApiGateway.name }}
+    spec:
+      containers:
+        - name: {{ .Values.llmKumaApiGateway.containerName }}
+          image: "{{ .Values.llmKumaApiGateway.image.repository }}:{{ .Values.llmKumaApiGateway.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.llmKumaApiGateway.ports.containerPort }}
+              protocol: {{ .Values.llmKumaApiGateway.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.commonConfigMap }}
+          env:
+            - name: UPTIME_KUMA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: uptimeKumaUsername
+            - name: UPTIME_KUMA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: uptimeKumaPassword
+            - name: UPTIME_KUMA_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: uptimeKumaUrl
+          resources:
+            requests:
+              memory: {{ .Values.llmKumaApiGateway.resources.requests.memory }}
+              cpu: {{ .Values.llmKumaApiGateway.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.llmKumaApiGateway.resources.limits.memory }}
+              cpu: {{ .Values.llmKumaApiGateway.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "llmKumaApiGateway.readinessProbe" . | nindent 12 }}
+{{- end }}

@@ -1,0 +1,70 @@
+{{- if .Values.apiGateway.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.apiGateway.name }}
+  annotations:
+    {{- toYaml .Values.apiGateway.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.apiGateway.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.apiGateway.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apiGateway.name }}
+    spec:
+      containers:
+        - name: {{ .Values.apiGateway.containerName }}
+          image: "{{ .Values.apiGateway.image.repository }}:{{ .Values.apiGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.apiGateway.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.apiGateway.ports.containerPort }}
+              protocol: {{ .Values.apiGateway.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.commonConfigMap }}
+          env:
+            - name: REDIS_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordRedisSecretsManagerName }}
+                  key: redis-password
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: redisHost
+            - name: ARGOCD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: argocd-secret
+                  key: clearPassword
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordRabbitMQSecretsManagerName }}
+                  key: rabbitmq-password
+            - name: RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: rabbitMQHost
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbRootHost
+            - name: CONFIXA_ARGO_NAMESPACE
+              value: {{ .Release.Namespace }}
+          resources:
+            requests:
+              memory: {{ .Values.apiGateway.resources.requests.memory }}
+              cpu: {{ .Values.apiGateway.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.apiGateway.resources.limits.memory }}
+              cpu: {{ .Values.apiGateway.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "apiGateway.readinessProbe" . | nindent 12 }}
+{{- end }}

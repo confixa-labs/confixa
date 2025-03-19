@@ -1,0 +1,56 @@
+{{- if .Values.llmKumaApiGateway.enable }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: even-slug-cron
+spec:
+  schedule: "30,00 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: even-slug-cron
+              image: "{{ .Values.apiGateway.image.repository }}:{{ .Values.apiGateway.image.tag }}"
+              command: ["npm", "run", "cron"]
+              envFrom:
+                - configMapRef:
+                    name: {{ .Values.commonConfigMap }}
+              env:
+                - name: evenSlugCron
+                  value: "true"
+                - name: REDIS_AUTH_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.passwordRedisSecretsManagerName }}
+                      key: redis-password
+                - name: REDIS_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.passwordSecretsManagerName }}
+                      key: redisHost
+                - name: ARGOCD_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: argocd-secret
+                      key: clearPassword
+                - name: RABBITMQ_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.passwordRabbitMQSecretsManagerName }}
+                      key: rabbitmq-password
+                - name: RABBITMQ_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.passwordSecretsManagerName }}
+                      key: rabbitMQHost
+                - name: MONGO_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.passwordSecretsManagerName }}
+                      key: mongodbRootHost
+                - name: CONFIXA_ARGO_NAMESPACE
+                  value: {{ .Release.Namespace }}
+              imagePullPolicy: Always
+          restartPolicy: OnFailure
+{{- end }}

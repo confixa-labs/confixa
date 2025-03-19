@@ -1,0 +1,24 @@
+dependencies:
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 20.2.0
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 14.1.4
+- name: argo-cd
+  repository: https://charts.bitnami.com/bitnami
+  version: 7.0.20
+- name: cost-analyzer
+  repository: https://kubecost.github.io/cost-analyzer
+  version: 2.5.2-rc.2
+- name: uptime-kuma
+  repository: https://dirsigler.github.io/uptime-kuma-helm
+  version: 2.21.1
+- name: contour
+  repository: https://charts.bitnami.com/bitnami
+  version: 19.4.0
+- name: oauth2-proxy
+  repository: https://oauth2-proxy.github.io/manifests
+  version: 7.9.2
+digest: sha256:1a6628d04275f574f19da39727d542d1dca90685346b7cd48b625737b6cfb08a
+generated: "2025-03-11T17:51:47.747128+05:30"

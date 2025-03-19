@@ -1,0 +1,67 @@
+{{- if .Values.apiGateway.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.apiGateway.cronName }}
+  annotations:
+    git: https://github.com/confixa/confixa-gitops.git
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.apiGateway.cronName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apiGateway.cronName }}
+    spec:
+      containers:
+        - name: {{ .Values.apiGateway.cronContainerName }}
+          image: "{{ .Values.apiGateway.image.repository }}:{{ .Values.apiGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.apiGateway.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.apiGateway.ports.containerPort }}
+              protocol: {{ .Values.apiGateway.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.commonConfigMap }}
+          env:
+            - name: ISSUE_CRON_INIT
+              value: 'true'
+            - name: ISSUE_CRON_SCHEDULE
+              value: '*/10 * * * *'
+            - name: REDIS_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordRedisSecretsManagerName }}
+                  key: redis-password
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: redisHost
+            - name: ARGOCD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: argocd-secret
+                  key: clearPassword
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordRabbitMQSecretsManagerName }}
+                  key: rabbitmq-password
+            - name: RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: rabbitMQHost
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbRootHost
+            - name: CONFIXA_ARGO_NAMESPACE
+              value: {{ .Release.Namespace }}
+          readinessProbe:
+            {{- include "apiGateway.readinessProbe" . | nindent 12 }}
+{{- end }}

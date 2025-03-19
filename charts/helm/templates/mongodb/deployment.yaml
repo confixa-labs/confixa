@@ -1,0 +1,45 @@
+{{- if .Values.mongodb.enable }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.mongodb.name }}
+spec:
+  serviceName: {{ .Values.mongodb.service.name }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.mongodb.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mongodb.name }}
+    spec:
+      containers:
+        - name: {{ .Values.mongodb.containerName }}
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.mongodb.service.port }}
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "{{ .Values.mongodb.auth.rootUser }}"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.passwordSecretsManagerName }}"
+                  key: mongodbRootPassword
+            - name: MONGO_INITDB_DATABASE
+              value: "{{ .Values.mongodb.auth.rootDatabase }}"
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.persistence.size }}
+{{- end }}
