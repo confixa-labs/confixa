@@ -50,6 +50,6 @@ entries:
     icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
     name: Confixa
     urls:
-    - Confixa-0.9.1.tgz
+    - https://confixa.github.io/confixa-helm/charts/Confixa-0.9.1.tgz
     version: 0.9.1
 generated: "2025-03-20T11:46:55.967282+05:30"
