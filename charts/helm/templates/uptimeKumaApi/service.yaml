@@ -1,0 +1,14 @@
+{{- if .Values.uptimeKumaApi.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.uptimeKumaApi.name }}
+spec:
+  selector:
+    app: {{ .Values.uptimeKumaApi.name }}
+  ports:
+    - protocol: {{ .Values.uptimeKumaApi.service.protocol }}
+      port: {{ .Values.uptimeKumaApi.service.port }}
+      targetPort: {{ .Values.uptimeKumaApi.service.targetPort }}
+  type: {{ .Values.uptimeKumaApi.service.type }}
+{{- end }}

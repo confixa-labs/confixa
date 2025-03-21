@@ -1,0 +1,37 @@
+{{- if .Values.frontend.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.frontend.name }}
+  annotations:
+    {{- toYaml .Values.frontend.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.name }}
+    spec:
+      containers:
+        - name: {{ .Values.frontend.containerName }}
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.frontend.ports.containerPort }}
+              protocol: {{ .Values.frontend.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.frontend.configMapRef }}
+          resources:
+            requests:
+              memory: {{ .Values.frontend.resources.requests.memory }}
+              cpu: {{ .Values.frontend.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.frontend.resources.limits.memory }}
+              cpu: {{ .Values.frontend.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "frontend.readinessProbe" . | nindent 12 }}
+{{- end }}

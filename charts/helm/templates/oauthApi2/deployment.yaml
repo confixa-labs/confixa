@@ -1,0 +1,63 @@
+{{- if .Values.oauthApi2.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.oauthApi2.name }}
+  annotations:
+    {{- toYaml .Values.oauthApi2.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.oauthApi2.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.oauthApi2.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.oauthApi2.name }}
+    spec:
+      containers:
+        - name: {{ .Values.oauthApi2.containerName }}
+          image: "{{ .Values.oauthApi2.image.repository }}:{{ .Values.oauthApi2.image.tag }}"
+          imagePullPolicy: {{ .Values.oauthApi2.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.oauthApi2.ports.containerPort }}
+              protocol: {{ .Values.oauthApi2.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.oauthApi2.configMapRef }}
+          env:
+            - name: REDIS_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: redisPassword
+            - name: ARGOCD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: argocdPassword
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: rabbitmqPassword
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbRootPassword
+            - name: MONGODB_USERS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbUsersPassword
+          resources:
+            requests:
+              memory: {{ .Values.oauthApi2.resources.requests.memory }}
+              cpu: {{ .Values.oauthApi2.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.oauthApi2.resources.limits.memory }}
+              cpu: {{ .Values.oauthApi2.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "oauthApi2.readinessProbe" . | nindent 12 }}
+{{- end }}

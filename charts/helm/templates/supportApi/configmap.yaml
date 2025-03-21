@@ -1,0 +1,8 @@
+{{- if .Values.supportApi.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.supportApi.configMapRef }}
+data:
+  NODE_ENV: dev
+{{- end }}

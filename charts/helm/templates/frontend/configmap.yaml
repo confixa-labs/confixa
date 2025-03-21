@@ -1,0 +1,72 @@
+{{- if .Values.frontend.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.frontend.configMapRef }}
+data:
+  # REACT_APP_CONFIXA: 'https://www.wohlig.com/'
+  REACT_APP_USER_MANAGEMENT_URL: "https://backend.confixa.com/"
+  REACT_APP_NEW_API_BASE_URL: "https://api.confixa.com/"
+  REACT_APP_LICENSE_API_BASE_URL: "https://confixa-licensing.wohlig.com/"
+  REACT_APP_SUPPORT_TICKET_BASE_URL: "https://confixa-support.wohlig.com/"
+  REACT_APP_AUTH_APP_BASE_URL: "https://confixa-oauth.wohlig.com/"
+  REACT_APP_REDIRECT_URI: "https://frontend.confixa.com/sign-in"
+
+  REACT_APP_BASE_URL_SIGN_IN: "https://sso-dev.confixa.com/realms/confixa-dev/protocol/openid-connect/auth"
+  REACT_APP_KEYCLOAK_URL: "https://sso-dev.confixa.com/admin/master/console/#/confixa-dev/users"
+
+  REACT_APP_ARGOCD_INVITE_URL: "https://argo-cd.readthedocs.io/en/release-2.0/user-guide/private-repositories/"
+  REACT_APP_GITHUB_ACCESS_TOKENS_URL: "https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+  REACT_APP_CLOUD_ARTIFACT_REGISTRY: "https://cloud.google.com/artifact-registry/docs/repositories/create-repos"
+  REACT_APP_ELASTIC_CLOUD_DOCUMENTATION_URL: ""
+  REACT_APP_MONITORING_DOCUMENTATION_URL: ""
+
+  REACT_APP_ENVIRONMENT: "development"
+  PORT: "3003"
+  PROTOCOL: "https"
+  HOST: "localhost"
+  REACT_APP_CONFIXA: "https://www.confixa.com/"
+  REACT_APP_RESPONSE_TYPE: "code"
+  REACT_APP_CLIENT_ID: "frontend"
+  REACT_APP_SCOPE: "openid"
+
+  REACT_APP_KIBANA_CDPIPELINE: "https://kibana.confixa.com/app/r/s/JB0Xj"
+  REACT_APP_KIBANA_FRAME_URL: "https://kibana.confixa.com/app/r/s/9j9VX"
+  REACT_APP_KIBANA: "https://kibana.confixa.com/"
+  REACT_APP_KIBANA_KUBERNETSNEWFRAME: "https://kibana.confixa.com/app/r/s/XmLro"
+
+  REACT_APP_SIMMMPLE_LICENSES: "https://simmmple.com/licenses"
+  REACT_APP_SIMMMPLE_TERMSSERVICE: "https://simmmple.com/terms-of-service"
+  REACT_APP_HORIZON_UI: "https://blog.horizon-ui.com/"
+
+  REACT_APP_KEYCLOAK_INIT: "true"
+  REACT_APP_PRIVATE_SERVICE_ACTIVE: "false"
+  REACT_APP_BACKGROUND_WORKERS_ACTIVE: "false"
+  REACT_APP_BLUEPRINTS_ACTIVE: "false"
+  REACT_APP_SHOW_CHAT_BOAT: "true"
+
+  REACT_APP_SUPPORT_TICKETS: "https://confixa.freshdesk.com/support/tickets"
+  REACT_APP_SUPPORT_SUBMIT_TICKET: "https://confixa.freshdesk.com/support/tickets/new"
+
+  REACT_APP_SHOW_SERVICE_UPTIME_STATUS_CARD: "true"
+  REACT_APP_UPTIME_URL: "https://uptime.confixa.com/status/confixa-services"
+  REACT_APP_UPTIME_STATUS_PAGE_URL: "https://uptime.confixa.com/status"
+  REACT_APP_ARGOCD_URL: "https://argocd.confixa.com/auth/login"
+  REACT_APP_KUBECOST_URL: "https://kubecost.confixa.com/"
+  REACT_APP_KUBERNETES_DASHBOARD_URL: "https://cluster-dashboard.confixa.com/#/workloads?namespace=default"
+
+  REACT_APP_LOGS_URI: "/app/discover"
+  REACT_APP_TRACE_URI: "/app/apm/services"
+  REACT_APP_METRICS_URI: "/app/dashboards#/list"
+
+  REACT_APP_IMAGE_URL: "https://storage.googleapis.com/confixa-files"
+  REACT_APP_TRACE_IMG: "/traces.png"
+  REACT_APP_LOGS_IMG: "/logs.png"
+  REACT_APP_KUBECOST_IMG: "/kubecost.png"
+  REACT_APP_METRICS_IMG: "/metrics.png"
+  REACT_APP_SYSTEM_HEALTH_IMG: "/system-health.png"
+  REACT_APP_ARGOCD_IMG: "/argocd.png"
+  REACT_APP_CLUSTER_DASHBOARD_IMG: "/dashboard.png"
+
+  REACT_APP_CRYPTO_KEY: "6DfZT3zjhHIOHnihideLV5ObZ3exiXsA"
+{{- end }}

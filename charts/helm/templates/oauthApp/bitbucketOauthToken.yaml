@@ -1,0 +1,24 @@
+{{- if .Values.oauthApp.enable }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bitbucket-oauth-token-cron
+spec:
+  schedule: "*/40 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: bitbucket-oauth-token-cron
+              image: "{{ .Values.oauthApp.image.repository }}:{{ .Values.oauthApp.image.tag }}"
+              command: ["npm", "run", "cron"]
+              envFrom:
+                - configMapRef:
+                    name: {{ .Values.oauthApp.configMapRef }}
+              env:
+                - name: bitbucketOauthTokenCron
+                  value: 'true'
+              imagePullPolicy: Always
+          restartPolicy: OnFailure
+{{- end }}

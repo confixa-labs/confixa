@@ -1,0 +1,65 @@
+{{- if .Values.uptimeKumaApi.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.uptimeKumaApi.name }}
+  annotations:
+    {{- toYaml .Values.uptimeKumaApi.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.uptimeKumaApi.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.uptimeKumaApi.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.uptimeKumaApi.name }}
+    spec:
+      containers:
+        - name: {{ .Values.uptimeKumaApi.containerName }}
+          image: "{{ .Values.uptimeKumaApi.image.repository }}:{{ .Values.uptimeKumaApi.image.tag }}"
+          imagePullPolicy: {{ .Values.uptimeKumaApi.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.uptimeKumaApi.ports.containerPort }}
+              protocol: {{ .Values.uptimeKumaApi.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.uptimeKumaApi.configMapRef }}
+            - configMapRef:
+                name: {{ .Values.commonConfigMap }}
+          env:
+            - name: REDIS_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: redisPassword
+            - name: ARGOCD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: argocdPassword
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: rabbitmqPassword
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbRootPassword
+            - name: MONGODB_USERS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbUsersPassword
+          resources:
+            requests:
+              memory: {{ .Values.uptimeKumaApi.resources.requests.memory }}
+              cpu: {{ .Values.uptimeKumaApi.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.uptimeKumaApi.resources.limits.memory }}
+              cpu: {{ .Values.uptimeKumaApi.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "uptimeKumaApi.readinessProbe" . | nindent 12 }}
+{{- end }}
