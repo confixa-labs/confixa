@@ -1,6 +1,6 @@
 # REQUIRED DEPENDENCIES VALUES DO NOT REMOVE
 redis:
-  enable: true
+  enable: false
   auth:
     enabled: true
     existingSecret: "redis-password-secret"
@@ -12,14 +12,14 @@ redis:
     replicaCount: 1
     nodeSelector: {}
 rabbitmq:
-  enable: true
+  enable: false
   service:
     name: "confixa-rabbitmq"
   auth:
     username: admin
     existingPasswordSecret: "rabbitmq-password-secret"
 mongodb:
-  enable: true
+  enable: false
   name: "confixa-mongodb"
   containerName: "confixa-mongodb"
   image:
