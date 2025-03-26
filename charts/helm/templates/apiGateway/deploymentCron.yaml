@@ -62,6 +62,8 @@ spec:
                   key: mongodbRootHost
             - name: CONFIXA_ARGO_NAMESPACE
               value: {{ .Release.Namespace }}
+            - name: ARTIFACT_NAMESPACE
+              value: {{ .Release.Namespace }}
           readinessProbe:
             {{- include "apiGateway.readinessProbe" . | nindent 12 }}
 {{- end }}

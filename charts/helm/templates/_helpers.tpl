@@ -13,19 +13,6 @@ timeoutSeconds: 1
 {{- end }}
 
 {{/*
-create readinessProbe for Uptime Kuma API deployment
-*/}}
-{{- define "llmKumaApiGateway.readinessProbe" -}}
-failureThreshold: 3
-initialDelaySeconds: 5
-periodSeconds: 10
-successThreshold: 1
-tcpSocket:
-  port: {{ .Values.llmKumaApiGateway.ports.containerPort }}
-timeoutSeconds: 1
-{{- end }}
-
-{{/*
 create readinessProbe for frontend deployment
 */}}
 {{- define "frontend.readinessProbe" -}}

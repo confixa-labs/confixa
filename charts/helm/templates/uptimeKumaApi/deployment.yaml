@@ -40,13 +40,4 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.passwordSecretsManagerName }}
                   key: uptimeKumaUrl
-          resources:
-            requests:
-              memory: {{ .Values.llmKumaApiGateway.resources.requests.memory }}
-              cpu: {{ .Values.llmKumaApiGateway.resources.requests.cpu }}
-            limits:
-              memory: {{ .Values.llmKumaApiGateway.resources.limits.memory }}
-              cpu: {{ .Values.llmKumaApiGateway.resources.limits.cpu }}
-          readinessProbe:
-            {{- include "llmKumaApiGateway.readinessProbe" . | nindent 12 }}
 {{- end }}
