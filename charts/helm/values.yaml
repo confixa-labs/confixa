@@ -142,7 +142,7 @@ llmKumaApiGateway:
   containerName: confixa-llm-kuma-api
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma
-    tag: sha-dcf87156f87525459939878e2ac0faa98dfdd365
+    tag: sha-80b288da85180c2683f24a9dcfeb34615be05710
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
