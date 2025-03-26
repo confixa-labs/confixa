@@ -21,12 +21,6 @@ x-google-marketplace:
           type: REGISTRY
         apiGateway.image.tag:
           type: TAG
-    watcher:
-      properties:
-        watcher.image.repository:
-          type: REGISTRY
-        watcher.image.tag:
-          type: TAG
     llmKumaApiGateway:
       properties:
         llmKumaApiGateway.image.repository:
