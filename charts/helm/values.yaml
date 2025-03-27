@@ -33,9 +33,6 @@ mongodb:
   auth:
     rootUser: root
     rootDatabase: "confixa"
-    usernames: ["confixa-admin"]
-    passwords: ["Sm2dnl23dwe7lerPDD"]
-    databases: ["confixa"]
   persistence:
     enabled: true
     size: 8Gi

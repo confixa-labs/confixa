@@ -111,11 +111,8 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | llmKumaApiGateway.service.targetPort | int | `5002` |  |
 | llmKumaApiGateway.service.type | string | `"ClusterIP"` |  |
 | mongodb.affinity | object | `{}` |  |
-| mongodb.auth.databases[0] | string | `"confixa"` |  |
-| mongodb.auth.passwords[0] | string | `"Sm2dnl23dwe7lerPDD"` |  |
 | mongodb.auth.rootDatabase | string | `"confixa"` |  |
 | mongodb.auth.rootUser | string | `"root"` |  |
-| mongodb.auth.usernames[0] | string | `"confixa-admin"` |  |
 | mongodb.containerName | string | `"confixa-mongodb"` |  |
 | mongodb.enable | bool | `true` |  |
 | mongodb.image.pullPolicy | string | `"IfNotPresent"` |  |
