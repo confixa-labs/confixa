@@ -26,26 +26,6 @@ dependencies:
     version: "7.0.20"
     repository: "https://charts.bitnami.com/bitnami"
     condition: argocd.enable
-  - alias: kubecost
-    name: cost-analyzer
-    version: "2.5.2-rc.2"
-    repository: "https://kubecost.github.io/cost-analyzer"
-    condition: kubecost.enable
-  - alias: uptimekuma
-    name: uptime-kuma
-    version: "2.21.1"
-    repository: "https://dirsigler.github.io/uptime-kuma-helm"
-    condition: uptimekuma.enable
-  - alias: contour
-    name: contour
-    version: "19.4.0"
-    repository: "https://charts.bitnami.com/bitnami"
-    condition: contour.enable
-  - alias: oauth2proxy
-    repository: https://oauth2-proxy.github.io/manifests
-    name: oauth2-proxy
-    version: "7.9.2"
-    condition: oauth2proxy.enable
 annotations:
   artifacthub.io/changes: |
     - kind: changed

@@ -26,27 +26,9 @@ spec:
                 name: {{ .Values.commonConfigMap }}
           env:
             - name: UPTIME_KUMA_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.passwordSecretsManagerName }}
-                  key: uptimeKumaUsername
+              value: ''
             - name: UPTIME_KUMA_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.passwordSecretsManagerName }}
-                  key: uptimeKumaPassword
+              value: ''
             - name: UPTIME_KUMA_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.passwordSecretsManagerName }}
-                  key: uptimeKumaUrl
-          resources:
-            requests:
-              memory: {{ .Values.llmKumaApiGateway.resources.requests.memory }}
-              cpu: {{ .Values.llmKumaApiGateway.resources.requests.cpu }}
-            limits:
-              memory: {{ .Values.llmKumaApiGateway.resources.limits.memory }}
-              cpu: {{ .Values.llmKumaApiGateway.resources.limits.cpu }}
-          readinessProbe:
-            {{- include "llmKumaApiGateway.readinessProbe" . | nindent 12 }}
+              value: ''
 {{- end }}

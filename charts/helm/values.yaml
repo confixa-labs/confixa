@@ -1,6 +1,6 @@
 # REQUIRED DEPENDENCIES VALUES DO NOT REMOVE
 redis:
-  enable: false
+  enable: true
   auth:
     enabled: true
     existingSecret: "redis-password-secret"
@@ -12,14 +12,14 @@ redis:
     replicaCount: 1
     nodeSelector: {}
 rabbitmq:
-  enable: false
+  enable: true
   service:
     name: "confixa-rabbitmq"
   auth:
     username: admin
     existingPasswordSecret: "rabbitmq-password-secret"
 mongodb:
-  enable: false
+  enable: true
   name: "confixa-mongodb"
   containerName: "confixa-mongodb"
   image:
@@ -44,7 +44,7 @@ mongodb:
   tolerations: []
   affinity: {}
 argocd:
-  enable: false
+  enable: true
   redis:
     enabled: false # Disable the built-in Redis
   ## Set external Redis configuration
@@ -53,54 +53,6 @@ argocd:
     port: 6379
     existingSecret: "redis-password-secret" # Kubernetes Secret that stores the Redis password
     existingSecretPasswordKey: "redis-password" # Key in the secret that holds the password
-kubernetesdashboard:
-  enable: false
-  metricsScraper:
-    enable: false
-    name: dashboard-metrics-scraper
-    containerName: dashboard-metrics-scraper
-    service:
-      port: 8000
-      targetPort: 8000
-  name: kubernetes-dashboard
-  containerName: kubernetes-dashboard
-  kong:
-    deployment:
-      name: admin-user
-      automountServiceAccountToken: true
-    env:
-      ADMIN_LISTEN: off
-      PROXY_LISTEN: |
-        0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2
-        ssl
-      PORT_MAPS: 80:8000, 443:8443
-    proxy:
-      type: ClusterIP
-      http:
-        enabled: true
-  service:
-    port: 80
-    targetPort: 9090
-  serviceAccount:
-    adminServiceAccountRef: admin-user
-  secret:
-    tokenSecretRef: admin-user-token
-    csrfSecretRef: kubernetes-dashboard-csrf
-    certsSecretRef: kubernetes-dashboard-certs
-  configMapRef: kubernetes-dashboard-settings
-kubecost:
-  enable: false
-  # kubecostToken: Add the Token for Enterprise users
-uptimekuma:
-  enable: false
-  username: "system-health"
-  password: "SystemHealth123!@#"
-  service:
-    name: "confixa-uptimekuma"
-contour:
-  enable: false
-oauth2proxy:
-  enable: false
 # REQUIRED DEPENDENCIES VALUES ENDS HERE
 appName: confixa
 commonConfigMap: confixa-configmap
@@ -108,7 +60,7 @@ passwordSecretsManagerName: confixa-passwords-secret
 passwordRedisSecretsManagerName: redis-password-secret
 passwordRabbitMQSecretsManagerName: rabbitmq-password-secret
 apiGateway:
-  enable: false
+  enable: true
   name: confixa-api
   containerName: confixa-api
   cronName: confixa-api-cron
@@ -125,19 +77,19 @@ apiGateway:
       cpu: 100m
       memory: 128Mi
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 750m
+      memory: 1024Mi
   ports:
-    containerPort: 3000
+    containerPort: 5001
     protocol: TCP
   configMapRef: confixa-api
   service:
     protocol: TCP
     port: 80
-    targetPort: 3000
+    targetPort: 5001
     type: ClusterIP
 llmKumaApiGateway:
-  enable: false
+  enable: true
   name: confixa-llm-kuma-api
   containerName: confixa-llm-kuma-api
   image:
@@ -147,24 +99,17 @@ llmKumaApiGateway:
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
   replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
   ports:
-    containerPort: 5050
+    containerPort: 5002
     protocol: TCP
   configMapRef: confixa-llm-kuma-api
   service:
     protocol: TCP
     port: 80
-    targetPort: 5050
+    targetPort: 5002
     type: ClusterIP
 frontend:
-  enable: false
+  enable: true
   name: confixa-frontend
   containerName: confixa-frontend
   image:
@@ -182,52 +127,11 @@ frontend:
       cpu: 500m
       memory: 512Mi
   ports:
-    containerPort: 3001
+    containerPort: 5000
     protocol: TCP
   configMapRef: confixa-frontend
   service:
     protocol: TCP
     port: 80
-    targetPort: 3001
+    targetPort: 5000
     type: ClusterIP
-watcher:
-  enable: false
-  name: confixa-watcher
-  containerName: confixa-watcher
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/custom-runner/configmap-updates-watcher
-    tag: sha-1d2d767afc82565a5f7278d7dd92c5a919a763ce
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  secret:
-    secretRef:
-      variables: confixa-watcher-variables
-      file: confixa-watcher
-    variables:
-      configMapName: confixa-frontend
-      deploymentName: confixa-frontend
-      customExec: "true"
-      execPath: /app/frontend-update.sh
-      namespace: backend
-      repoUrl: https://github.com/confixa/Confixa-FrontEnd.git
-      branch: uat
-      serviceAccountKeyPath: /tmp/service-account.json
-      dockerRegion: asia-south1-docker.pkg.dev
-      gcrProjectId: confixa-rnd
-      dockerImageName: custom-runner/public-build
-      containerName: confixa-frontend
-    file:
-      mountPath: /mnt/secrets
-      secretInfo: '{key:"value"}'
-  serviceAccount:
-    serviceAccountRef: confixa-configmap-watcher
-    volumeRef: confixa-watcher-volume
-  docker:
-    dockerRef: docker-socket
-    dockerType: Socket
-    mountPath: /var/run/docker.sock
-  role:
-    roleRef: confixa-watcher-role
-  roleBinding:
-    roleBindingRef: confixa-watcher-role-binding
