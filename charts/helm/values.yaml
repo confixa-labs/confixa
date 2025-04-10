@@ -101,6 +101,8 @@ contour:
   enable: true
 oauth2proxy:
   enable: true
+oauth2k8s:
+  enable: true
 # REQUIRED DEPENDENCIES VALUES ENDS HERE
 appName: confixa
 commonConfigMap: confixa-configmap

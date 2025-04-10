@@ -46,6 +46,11 @@ dependencies:
     name: oauth2-proxy
     version: "7.9.2"
     condition: oauth2proxy.enable
+  - alias: oauth2k8s
+    repository: https://oauth2-proxy.github.io/manifests
+    name: oauth2-proxy
+    version: "7.9.2"
+    condition: oauth2k8s.enable
 annotations:
   artifacthub.io/changes: |
     - kind: changed
