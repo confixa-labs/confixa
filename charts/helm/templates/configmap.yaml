@@ -11,7 +11,7 @@ data:
   PYTHON_PORT: '5002'
   FLASK_ENV: 'production'
   PARTIAL_ON_BOARDING: 'false'
-  
+
   # REDIS
   REDIS_INIT: 'true'
   REDIS_PORT: '6379'
@@ -68,7 +68,8 @@ data:
   CONFIXA_LLM_KUMA_FLASK_PATHNAME: 'getLLMResponse'
   CONFIXA_KUBE_COST_API_URL:  '{{ .Values.service.url.kubeCost }}'
   ARGOCD_URL: '{{ .Values.service.url.argocd }}'
-
+  REDIRECT_URI: 'https://confixa-api.wohlig.com'
+  
   # ARTIFACT
   ARTIFACT_SECRET_NAME: 'artifact'
   
