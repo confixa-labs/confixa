@@ -17,6 +17,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | https://dirsigler.github.io/uptime-kuma-helm | uptimekuma(uptime-kuma) | 2.21.1 |
 | https://kubecost.github.io/cost-analyzer | kubecost(cost-analyzer) | 2.5.2-rc.2 |
 | https://oauth2-proxy.github.io/manifests | oauth2proxy(oauth2-proxy) | 7.9.2 |
+| https://oauth2-proxy.github.io/manifests | oauth2k8s(oauth2-proxy) | 7.9.2 |
 
 ## Values
 
@@ -127,6 +128,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | mongodb.service.port | int | `27017` |  |
 | mongodb.service.type | string | `"ClusterIP"` |  |
 | mongodb.tolerations | list | `[]` |  |
+| oauth2k8s.enable | bool | `true` |  |
 | oauth2proxy.enable | bool | `true` |  |
 | passwordRabbitMQSecretsManagerName | string | `"rabbitmq-password-secret"` |  |
 | passwordRedisSecretsManagerName | string | `"redis-password-secret"` |  |
@@ -142,6 +144,10 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | redis.replica.nodeSelector | object | `{}` |  |
 | redis.replica.replicaCount | int | `1` |  |
 | redis.service.name | string | `"confixa-redis-master"` |  |
+| service.url.argocd | string | `"http://localhost:3000"` |  |
+| service.url.backend | string | `"http://localhost:5001"` |  |
+| service.url.frontend | string | `"http://localhost:5000"` |  |
+| service.url.kubeCost | string | `"http://localhost:9090"` |  |
 | uptimekuma.enable | bool | `true` |  |
 | uptimekuma.password | string | `"SystemHealth123!@#"` |  |
 | uptimekuma.service.name | string | `"confixa-uptimekuma"` |  |

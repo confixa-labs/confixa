@@ -10,7 +10,8 @@ data:
   PORT: '5001'
   PYTHON_PORT: '5002'
   FLASK_ENV: 'production'
-
+  PARTIAL_ON_BOARDING: 'false'
+  
   # REDIS
   REDIS_INIT: 'true'
   REDIS_PORT: '6379'
@@ -57,16 +58,16 @@ data:
   ARTIFACT_HUB_URL : 'https://artifacthub.io/api/v1/packages/helm/bitnami'
   
   # MICROSERVICE URL
-  FRONTEND_URL: 'http://localhost:5000'
-  BACKEND_URL: 'http://localhost:5001'
-  CONFIXA_API_URL: 'http://localhost:5001'
-  CONFIXA_GITHUB_API_URL: 'http://localhost:5001'
-  CONFIXA_ARGO_API_URL: 'http://localhost:5001'
-  CONFIXA_ARGO_API_DOMAIN_BASED_URL: 'http://localhost:5001'
-  CONFIXA_LLM_KUMA_URL: 'http://localhost:5001'
+  FRONTEND_URL: '{{ .Values.service.url.frontend }}'
+  BACKEND_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_GITHUB_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_ARGO_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_ARGO_API_DOMAIN_BASED_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_LLM_KUMA_URL: '{{ .Values.service.url.backend }}'
   CONFIXA_LLM_KUMA_FLASK_PATHNAME: 'getLLMResponse'
-  CONFIXA_KUBE_COST_API_URL: 'http://localhost:9090'
-  ARGOCD_URL: 'http://localhost:3000'
+  CONFIXA_KUBE_COST_API_URL:  '{{ .Values.service.url.kubeCost }}'
+  ARGOCD_URL: '{{ .Values.service.url.argocd }}'
 
   # ARTIFACT
   ARTIFACT_SECRET_NAME: 'artifact'
@@ -83,24 +84,13 @@ data:
 
   # NODEMAILER
   MAILER_INIT: 'true'
-  EMAIL_USER: 'contact@confixa.com'
-  EMAIL_PASSWORD: 'vbab tpep gwwj qfxt'
-  EMAIL_SERVICE: 'gmail'
-
-  CRYPTO_KEY: '6DfZT3zguFwYFSuUGnJLV5ObZ3exiXsA'
-
-  # FRESHDESK
-  CONFIXA_FRESHDESK_URL: 'https://confixa.freshdesk.com'
-  CONFIXA_FRESHDESK_API_KEY: 'ew3oNWqs3VmSjYw82qE'
-
+  
   # GITHUB JOB RUNS ON
   JOB_RUNS_ON_TYPE: 'ubuntu'
   JOB_RUNS_ON_VERSION: '24.04'
 
   # TOOLS HANDLING ON/OFF
   HEALTH_CHECK_ENABLED: "true"
-  DASHBOARD_ENABLED: "true"
-  COST_MONITORING_ENABLED: "true"
   
   # DEBUG FOR PYTHON
   PYTHON_DEBUGGER: 'false'

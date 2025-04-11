@@ -226,3 +226,10 @@ watcher:
     roleRef: confixa-watcher-role
   roleBinding:
     roleBindingRef: confixa-watcher-role-binding
+# SERVICE URLS
+service:
+  url:
+    frontend: 'http://localhost:5000'
+    backend: 'http://localhost:5001'
+    argocd: 'http://localhost:3000'
+    kubeCost: 'http://localhost:9090'
