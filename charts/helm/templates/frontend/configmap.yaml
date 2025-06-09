@@ -59,7 +59,7 @@ data:
 
   REACT_APP_ARGOCD_PATHNAME: 'login'
   REACT_APP_KUBECOST_PATHNAME: 'overview'
-  REACT_APP_KUBERNETES_DASHBOARD_PATHNAME: '#/workloads?namespace=default'
+  REACT_APP_KUBERNETES_DASHBOARD_PATHNAME: '#/workloads'
 
   REACT_APP_LOGS_PATHNAME: '/app/discover'
   REACT_APP_TRACE_PATHNAME: '/app/apm/services'
