@@ -1,22 +1,22 @@
-{{- if .Values.apiGateway.enable }}
+{{- if .Values.apiGateway.issueCron.enable }}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: {{ .Values.apiGateway.cronName }}
+  name: {{ .Values.apiGateway.issueCron.name }}
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.apiGateway.cronName }}
+      app: {{ .Values.apiGateway.issueCron.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.apiGateway.cronName }}
+        app: {{ .Values.apiGateway.issueCron.name }}
     spec:
       containers:
-        - name: {{ .Values.apiGateway.cronContainerName }}
+        - name: {{ .Values.apiGateway.issueCron.containerName }}
           image: "{{ .Values.apiGateway.image.repository }}:{{ .Values.apiGateway.image.tag }}"
           imagePullPolicy: {{ .Values.apiGateway.image.pullPolicy }}
           ports:
@@ -40,11 +40,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.passwordSecretsManagerName }}
                   key: redisHost
-            - name: ARGOCD_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: argocd-secret
-                  key: clearPassword
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -60,10 +55,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.passwordSecretsManagerName }}
                   key: mongodbRootHost
-            - name: CONFIXA_ARGO_NAMESPACE
-              value: {{ .Release.Namespace }}
-            - name: ARTIFACT_NAMESPACE
-              value: {{ .Release.Namespace }}
+            - name: CONFIXA_LLM_KUMA_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: llmKumaHost
           readinessProbe:
             {{- include "apiGateway.readinessProbe" . | nindent 12 }}
 {{- end }}
