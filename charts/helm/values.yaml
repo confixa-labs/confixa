@@ -67,7 +67,7 @@ apiGateway:
   cronContainerName: confixa-api-cron
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
-    tag: sha-2d9385d757bef8c39c9bb4d56d7e5b8db819f8f0
+    tag: sha-413ec9a3ed9da2f1b660e56ad593bfeeb52b7abb
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
@@ -114,7 +114,7 @@ frontend:
   containerName: confixa-frontend
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
-    tag: sha-5b1621cd1e46acc0b169b09dbf066a6398aa84be
+    tag: sha-e320e9bbcd4062afca7ddb68e50ff3754df1a98d
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
