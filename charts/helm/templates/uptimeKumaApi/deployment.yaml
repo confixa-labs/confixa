@@ -24,11 +24,4 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.commonConfigMap }}
-          env:
-            - name: UPTIME_KUMA_USERNAME
-              value: ''
-            - name: UPTIME_KUMA_PASSWORD
-              value: ''
-            - name: UPTIME_KUMA_URL
-              value: ''
 {{- end }}
