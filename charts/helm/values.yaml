@@ -59,6 +59,10 @@ apiGateway:
     enable: true
     name: confixa-monitor-cleaner
     containerName: confixa-monitor-cleaner
+  bitbucketOauthToken: 
+    enable: true
+    name: confixa-bitbucket-oauth-token
+    containerName: confixa-bitbucket-oauth-token
   oddSlug:
     enable: true
     name: confixa-odd-slug
@@ -75,7 +79,7 @@ apiGateway:
   containerName: confixa-api
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
-    tag: 01778275dbb85ecb65f5902872c47c3716e7434e
+    tag: 4d3a6f3481eb77796cc09a04f694e668c0aca85c
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
@@ -123,7 +127,7 @@ frontend:
   containerName: confixa-frontend
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
-    tag: 2e5abf2b678d73c447f39fb4da1cb80a14e2fd44
+    tag: 268789b9ca241f145ad578e681364c4287fc1397
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
