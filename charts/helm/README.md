@@ -21,6 +21,9 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.argoCdCheckStatus.containerName | string | `"confixa-argocd-check-status"` |  |
 | apiGateway.argoCdCheckStatus.enable | bool | `true` |  |
 | apiGateway.argoCdCheckStatus.name | string | `"confixa-argocd-check-status"` |  |
+| apiGateway.bitbucketOauthToken.containerName | string | `"confixa-bitbucket-oauth-token"` |  |
+| apiGateway.bitbucketOauthToken.enable | bool | `true` |  |
+| apiGateway.bitbucketOauthToken.name | string | `"confixa-bitbucket-oauth-token"` |  |
 | apiGateway.configMapRef | string | `"confixa-api"` |  |
 | apiGateway.containerName | string | `"confixa-api"` |  |
 | apiGateway.enable | bool | `true` |  |
@@ -29,7 +32,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.evenSlug.name | string | `"confixa-even-slug"` |  |
 | apiGateway.image.pullPolicy | string | `"Always"` |  |
 | apiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api"` |  |
-| apiGateway.image.tag | string | `"01778275dbb85ecb65f5902872c47c3716e7434e"` |  |
+| apiGateway.image.tag | string | `"4d3a6f3481eb77796cc09a04f694e668c0aca85c"` |  |
 | apiGateway.issueCron.containerName | string | `"confixa-issue-cron"` |  |
 | apiGateway.issueCron.enable | bool | `true` |  |
 | apiGateway.issueCron.name | string | `"confixa-issue-cron"` |  |
@@ -59,7 +62,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | frontend.enable | bool | `true` |  |
 | frontend.image.pullPolicy | string | `"Always"` |  |
 | frontend.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend"` |  |
-| frontend.image.tag | string | `"2e5abf2b678d73c447f39fb4da1cb80a14e2fd44"` |  |
+| frontend.image.tag | string | `"268789b9ca241f145ad578e681364c4287fc1397"` |  |
 | frontend.name | string | `"confixa-frontend"` |  |
 | frontend.ports.containerPort | int | `5000` |  |
 | frontend.ports.protocol | string | `"TCP"` |  |
