@@ -7,7 +7,7 @@ entries:
           description: Bump confixa to 0.0.1
     apiVersion: v2
     appVersion: 0.9.0-rc
-    created: "2025-06-09T12:55:05.991316+05:30"
+    created: "2025-06-11T05:50:19.218433901Z"
     dependencies:
     - alias: redis
       condition: redis.enable
@@ -20,11 +20,11 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 14.1.4
     description: A Helm chart that deploys confixa-with-microservices-and-dependencies
-    digest: 9de8924c38396d1bf0384453adfe4afc2cd96b6ab86816a187367870d6ba67ce
+    digest: a0d2dbd617675815a4dd7c4eb5d423a7a2ad7b4d5d823206ae56579edae1fda2
     home: https://confixa.com
     icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
     name: Confixa
     urls:
     - Confixa-0.9.1.tgz
     version: 0.9.1
-generated: "2025-06-09T12:55:05.98121+05:30"
+generated: "2025-06-11T05:50:19.206539011Z"

@@ -59,7 +59,7 @@ apiGateway:
     enable: true
     name: confixa-monitor-cleaner
     containerName: confixa-monitor-cleaner
-  bitbucketOauthToken: 
+  bitbucketOauthToken:
     enable: true
     name: confixa-bitbucket-oauth-token
     containerName: confixa-bitbucket-oauth-token
@@ -106,7 +106,7 @@ llmKumaApiGateway:
   containerName: confixa-llm-kuma-api
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma
-    tag: 92a696443cf10356ee9353126f09a8f88b969128
+    tag: sha-9f7d548a87919fa2f7cf6182d37094ef25b3f9a6
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
