@@ -1,4 +1,4 @@
-{{- if .Values.apiGateway.argoCdCheckStatus.enable }}
+{{- if (and (.Values.apiGateway.enable) (.Values.apiGateway.argoCdCheckStatus.enable)) }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:

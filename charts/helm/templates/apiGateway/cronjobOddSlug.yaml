@@ -1,4 +1,4 @@
-{{- if .Values.apiGateway.oddSlug.enable }}
+{{- if (and (.Values.apiGateway.enable) (.Values.apiGateway.oddSlug.enable)) }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
