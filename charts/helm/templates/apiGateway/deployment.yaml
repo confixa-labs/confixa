@@ -36,11 +36,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.passwordSecretsManagerName }}
                   key: redisHost
-            - name: ARGOCD_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: argocd-secret
-                  key: clearPassword
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -56,10 +51,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.passwordSecretsManagerName }}
                   key: mongodbRootHost
-            - name: CONFIXA_ARGO_NAMESPACE
-              value: {{ .Release.Namespace }}
-            - name: ARTIFACT_NAMESPACE
-              value: {{ .Release.Namespace }}
+            - name: CONFIXA_LLM_KUMA_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: llmKumaHost
           resources:
             requests:
               memory: {{ .Values.apiGateway.resources.requests.memory }}

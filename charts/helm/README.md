@@ -10,7 +10,6 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | argocd(argo-cd) | 7.0.20 |
 | https://charts.bitnami.com/bitnami | rabbitmq(rabbitmq) | 14.1.4 |
 | https://charts.bitnami.com/bitnami | redis(redis) | 20.2.0 |
 
@@ -19,15 +18,31 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | apiGateway.annotations.git | string | `"https://github.com/confixa/confixa-gitops.git"` |  |
+| apiGateway.argoCdCheckStatus.containerName | string | `"confixa-argocd-check-status"` |  |
+| apiGateway.argoCdCheckStatus.enable | bool | `true` |  |
+| apiGateway.argoCdCheckStatus.name | string | `"confixa-argocd-check-status"` |  |
+| apiGateway.bitbucketOauthToken.containerName | string | `"confixa-bitbucket-oauth-token"` |  |
+| apiGateway.bitbucketOauthToken.enable | bool | `true` |  |
+| apiGateway.bitbucketOauthToken.name | string | `"confixa-bitbucket-oauth-token"` |  |
 | apiGateway.configMapRef | string | `"confixa-api"` |  |
 | apiGateway.containerName | string | `"confixa-api"` |  |
-| apiGateway.cronContainerName | string | `"confixa-api-cron"` |  |
-| apiGateway.cronName | string | `"confixa-api-cron"` |  |
 | apiGateway.enable | bool | `true` |  |
+| apiGateway.evenSlug.containerName | string | `"confixa-even-slug"` |  |
+| apiGateway.evenSlug.enable | bool | `true` |  |
+| apiGateway.evenSlug.name | string | `"confixa-even-slug"` |  |
 | apiGateway.image.pullPolicy | string | `"Always"` |  |
 | apiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api"` |  |
-| apiGateway.image.tag | string | `"sha-2d9385d757bef8c39c9bb4d56d7e5b8db819f8f0"` |  |
+| apiGateway.image.tag | string | `"4d3a6f3481eb77796cc09a04f694e668c0aca85c"` |  |
+| apiGateway.issueCron.containerName | string | `"confixa-issue-cron"` |  |
+| apiGateway.issueCron.enable | bool | `true` |  |
+| apiGateway.issueCron.name | string | `"confixa-issue-cron"` |  |
+| apiGateway.monitorCleaner.containerName | string | `"confixa-monitor-cleaner"` |  |
+| apiGateway.monitorCleaner.enable | bool | `true` |  |
+| apiGateway.monitorCleaner.name | string | `"confixa-monitor-cleaner"` |  |
 | apiGateway.name | string | `"confixa-api"` |  |
+| apiGateway.oddSlug.containerName | string | `"confixa-odd-slug"` |  |
+| apiGateway.oddSlug.enable | bool | `true` |  |
+| apiGateway.oddSlug.name | string | `"confixa-odd-slug"` |  |
 | apiGateway.ports.containerPort | int | `5001` |  |
 | apiGateway.ports.protocol | string | `"TCP"` |  |
 | apiGateway.replicas | int | `1` |  |
@@ -40,12 +55,6 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.service.targetPort | int | `5001` |  |
 | apiGateway.service.type | string | `"ClusterIP"` |  |
 | appName | string | `"confixa"` |  |
-| argocd.enable | bool | `true` |  |
-| argocd.externalRedis.existingSecret | string | `"redis-password-secret"` |  |
-| argocd.externalRedis.existingSecretPasswordKey | string | `"redis-password"` |  |
-| argocd.externalRedis.host | string | `"confixa-redis-master"` |  |
-| argocd.externalRedis.port | int | `6379` |  |
-| argocd.redis.enabled | bool | `false` |  |
 | commonConfigMap | string | `"confixa-configmap"` |  |
 | frontend.annotations.git | string | `"https://github.com/confixa/confixa-gitops.git"` |  |
 | frontend.configMapRef | string | `"confixa-frontend"` |  |
@@ -53,7 +62,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | frontend.enable | bool | `true` |  |
 | frontend.image.pullPolicy | string | `"Always"` |  |
 | frontend.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend"` |  |
-| frontend.image.tag | string | `"sha-5b1621cd1e46acc0b169b09dbf066a6398aa84be"` |  |
+| frontend.image.tag | string | `"268789b9ca241f145ad578e681364c4287fc1397"` |  |
 | frontend.name | string | `"confixa-frontend"` |  |
 | frontend.ports.containerPort | int | `5000` |  |
 | frontend.ports.protocol | string | `"TCP"` |  |
@@ -72,11 +81,12 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | llmKumaApiGateway.enable | bool | `true` |  |
 | llmKumaApiGateway.image.pullPolicy | string | `"Always"` |  |
 | llmKumaApiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma"` |  |
-| llmKumaApiGateway.image.tag | string | `"sha-80b288da85180c2683f24a9dcfeb34615be05710"` |  |
+| llmKumaApiGateway.image.tag | string | `"92a696443cf10356ee9353126f09a8f88b969128"` |  |
 | llmKumaApiGateway.name | string | `"confixa-llm-kuma-api"` |  |
 | llmKumaApiGateway.ports.containerPort | int | `5002` |  |
 | llmKumaApiGateway.ports.protocol | string | `"TCP"` |  |
 | llmKumaApiGateway.replicas | int | `1` |  |
+| llmKumaApiGateway.service.name | string | `"confixa-llm-kuma-api"` |  |
 | llmKumaApiGateway.service.port | int | `80` |  |
 | llmKumaApiGateway.service.protocol | string | `"TCP"` |  |
 | llmKumaApiGateway.service.targetPort | int | `5002` |  |
@@ -115,6 +125,11 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | redis.replica.nodeSelector | object | `{}` |  |
 | redis.replica.replicaCount | int | `1` |  |
 | redis.service.name | string | `"confixa-redis-master"` |  |
+| service.url.argocd | string | `"http://localhost:3000"` |  |
+| service.url.backend | string | `"http://localhost:5001"` |  |
+| service.url.clusterDashboard | string | `"http://localhost:9091"` |  |
+| service.url.frontend | string | `"http://localhost:5000"` |  |
+| service.url.kubeCost | string | `"http://localhost:9090"` |  |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.9.1](https://github.com/norwoodj/helm-docs/releases/v1.9.1)

@@ -21,10 +21,8 @@ data:
 
   # Signin Flow
   AUTHENTICATION_INTERNAL_ALLOW: 'true'
-  JWTALGORITHM: 'HS256'
-  AUTHENTICATION_JWT_SECRET_KEY: 'hfekj93f74th2bed82733idnesfeo'
+  JWT_ALGORITHM: 'HS256'
   JWT_EXPIRY_IN_SECONDS: '86400000'
-  VALIDATION_SECRET: 'ConfixaHelmChart'
   
   # OPEN AI
   GPT_MODEL_NAME: 'gpt-4-0125-preview'
@@ -42,34 +40,30 @@ data:
   RABBITMQ_PORT : '5672'
   RABBITMQ_VHOST : "/"
 
-  # ARGOCD
-  ARGOCD_USERNAME : "admin"
-  
   # MONITORING
   # GCP
   MONITORING_URL : 'https://monitoring.googleapis.com/v3/'
   MONITORING_DURATION : 7d
-  MONITORING_SVC_ACC_KEY : '{}'
   MONITORING_SCOPE : 'https://www.googleapis.com/auth/cloud-platform'
-  GCP_PROJECT : ''
 
   # HELM VERSION
-  ARTIFACT_HUB_URL : 'https://artifacthub.io/api/v1/packages/helm/bitnami'
+  ARTIFACT_HUB_URL : 'https://artifacthub.io/api/v1/packages'
   
   # MICROSERVICE URL
-  FRONTEND_URL: 'http://localhost:5000'
-  BACKEND_URL: 'http://localhost:5001'
-  CONFIXA_API_URL: 'http://localhost:5001'
-  CONFIXA_GITHUB_API_URL: 'http://localhost:5001'
-  CONFIXA_ARGO_API_URL: 'http://localhost:5001'
-  CONFIXA_ARGO_API_DOMAIN_BASED_URL: 'http://localhost:5001'
-  CONFIXA_LLM_KUMA_URL: 'http://localhost:5001'
-  CONFIXA_LLM_KUMA_FLASK_PATHNAME: 'getLLMResponse'
-  CONFIXA_KUBE_COST_API_URL: 'http://localhost:9090'
-  ARGOCD_URL: 'http://localhost:3000'
+  FRONTEND_URL: '{{ .Values.service.url.frontend }}'
+  BACKEND_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_GITHUB_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_ARGO_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_ARGO_API_DOMAIN_BASED_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_KUBE_COST_API_URL:  '{{ .Values.service.url.kubeCost }}'
+  CLUSTER_MANAGEMENT_DASHBOARD_URL: '{{ .Values.service.url.clusterDashboard }}'
 
-  # ARTIFACT
-  ARTIFACT_SECRET_NAME: 'artifact'
+  # MICROSERVICE URL PATHNAME
+  CONFIXA_LLM_KUMA_FLASK_PATHNAME: 'getLLMResponse'
+  CLUSTER_MANAGEMENT_DASHBOARD_PATHNAME: '/#/workloads'
+  CONFIXA_ARGO_API_PATHNAME: '/login' 
+  CONFIXA_KUBE_COST_API_PATHNAME: '/overview'
   
   # VERBIAGE TEXT
   WORKFLOW_MESSAGE: 'Workflow automation enabled through Confixa.'
@@ -81,27 +75,16 @@ data:
   # APM
   APM_ENABLE: 'false'
 
-  # NODEMAILER
+  # NODE-EMAILER
   MAILER_INIT: 'true'
-  EMAIL_USER: 'contact@confixa.com'
-  EMAIL_PASSWORD: 'vbab tpep gwwj qfxt'
-  EMAIL_SERVICE: 'gmail'
-
-  CRYPTO_KEY: '6DfZT3zguFwYFSuUGnJLV5ObZ3exiXsA'
-
-  # FRESHDESK
-  CONFIXA_FRESHDESK_URL: 'https://confixa.freshdesk.com'
-  CONFIXA_FRESHDESK_API_KEY: 'ew3oNWqs3VmSjYw82qE'
 
   # GITHUB JOB RUNS ON
   JOB_RUNS_ON_TYPE: 'ubuntu'
   JOB_RUNS_ON_VERSION: '24.04'
 
   # TOOLS HANDLING ON/OFF
-  PARTIAL_ON_BOARDING: "true"
+  PARTIAL_ON_BOARDING: "false"
   HEALTH_CHECK_ENABLED: "false"
-  DASHBOARD_ENABLED: "false"
-  COST_MONITORING_ENABLED: "false"
   
   # DEBUG FOR PYTHON
   PYTHON_DEBUGGER: 'false'

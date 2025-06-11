@@ -5,8 +5,5 @@ dependencies:
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
   version: 14.1.4
-- name: argo-cd
-  repository: https://charts.bitnami.com/bitnami
-  version: 7.0.20
-digest: sha256:e1fb74597e5e6137dfba0ccff412ce97ad0d64ec392d6ff07a946a15db10e006
-generated: "2025-03-26T17:12:32.213894+05:30"
+digest: sha256:678a730e17e312eae4d9c6490de8ce7d09dddf35d971eb56947e48cebfecf8d0
+generated: "2025-06-09T12:54:12.134199+05:30"

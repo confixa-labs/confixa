@@ -21,11 +21,6 @@ dependencies:
     version: "14.1.4"
     repository: "https://charts.bitnami.com/bitnami"
     condition: rabbitmq.enable
-  - alias: argocd
-    name: argo-cd
-    version: "7.0.20"
-    repository: "https://charts.bitnami.com/bitnami"
-    condition: argocd.enable
 annotations:
   artifacthub.io/changes: |
     - kind: changed

@@ -4,11 +4,11 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.frontend.configMapRef }}
 data:
-  REACT_APP_API_URL: 'http://localhost:5001/'
+  REACT_APP_API_URL: '{{ .Values.service.url.backend }}/'
   REACT_APP_LICENSE_API_URL: 'https://confixa-api.wohlig.com/'
   REACT_APP_THIRD_PARTY_AUTH_APP_URL: 'https://confixa-api.wohlig.com/'
   
-  REACT_APP_REDIRECT_URL: 'http://localhost:5000/'
+  REACT_APP_REDIRECT_URL: '{{ .Values.service.url.frontend }}/'
   REACT_APP_REDIRECT_PATHNAME: 'sign-in'
 
   REACT_APP_KEYCLOAK_URL: 'http://localhost:8080'
@@ -25,7 +25,7 @@ data:
   REACT_APP_COST_OPTIMIZE_DOCUMENTATION_URL: ''
 
   REACT_APP_ENVIRONMENT: 'production'
-  PORT: '3001'
+  PORT: '5000'
   PROTOCOL: 'https'
   HOST: 'localhost'
   REACT_APP_CONFIXA_WEB_URL: 'https://confixa.com/'
@@ -44,26 +44,22 @@ data:
 
   # ON OFF / COMMENT UNCOMMENT BASED ON REQUIREMENT
   REACT_APP_KEYCLOAK_INIT: 'false'
-  REACT_APP_PARTIAL_ON_BOARDING: 'true'
+  REACT_APP_PARTIAL_ON_BOARDING: 'false'
   REACT_APP_GOOGLE_SIGN_IN_SHOW: 'false'
-  REACT_APP_PARTIAL_ON_BOARDING: 'true'
   REACT_APP_PRIVATE_SERVICE_ACTIVE: 'false'
   REACT_APP_BACKGROUND_WORKERS_ACTIVE: 'false'
   REACT_APP_BLUEPRINTS_ACTIVE: 'false'
   REACT_APP_SHOW_CHAT_BOAT: 'true'
-  # REACT_APP_SHOW_MONITORING_CARD: 'true'
-  # REACT_APP_UPTIME_URL: 'http://localhost:3001/'
-  REACT_APP_ARGOCD_URL: 'http://localhost:3000/'
-  # REACT_APP_KUBERNETES_DASHBOARD_URL: 'http://localhost:9091/'
-  # REACT_APP_KUBECOST_URL: 'http://localhost:9090/'
+  REACT_APP_BYPASS_SUBSCRIPTION_CHECK: 'true'
+  REACT_APP_DOMAIN_BASE_SETUP: 'false'
+  REACT_APP_ARGOCD_URL: '{{ .Values.service.url.argocd }}/'
+  REACT_APP_KUBERNETES_DASHBOARD_URL: '{{ .Values.service.url.clusterDashboard }}/'
+  REACT_APP_KUBECOST_URL: '{{ .Values.service.url.kubeCost }}/'
   # ON OFF / COMMENT UNCOMMENT BASED ON REQUIREMENT END
 
-  REACT_APP_UPTIME_MANAGE_PATHNAME: 'status/confixa-status'
-  REACT_APP_UPTIME_STATUS_PATHNAME: 'status'
-
-  REACT_APP_ARGOCD_PATHNAME: 'auth/login'
-
-  REACT_APP_KUBERNETES_DASHBOARD_PATHNAME: '#/workloads?namespace=default'
+  REACT_APP_ARGOCD_PATHNAME: 'applications'
+  REACT_APP_KUBECOST_PATHNAME: 'overview'
+  REACT_APP_KUBERNETES_DASHBOARD_PATHNAME: '#/workloads'
 
   REACT_APP_LOGS_PATHNAME: '/app/discover'
   REACT_APP_TRACE_PATHNAME: '/app/apm/services'
@@ -79,6 +75,4 @@ data:
   REACT_APP_CLUSTER_DASHBOARD_IMG: '/dashboard.png'
   REACT_APP_CONFIGURE_OBSERVABILITY_PDF: '/configure-observability.pdf'
   REACT_APP_CONFIGURE_MONITORING_PDF: '/configure-monitoring.pdf'
-
-  REACT_APP_CRYPTO_KEY: '9JhQB3qbjDwSFYuUGnVLJ5ObQ3xwiWkL'
 {{- end }}

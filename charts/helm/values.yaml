@@ -43,16 +43,6 @@ mongodb:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-argocd:
-  enable: true
-  redis:
-    enabled: false # Disable the built-in Redis
-  ## Set external Redis configuration
-  externalRedis:
-    host: "confixa-redis-master" # Change this to match your Redis Service name
-    port: 6379
-    existingSecret: "redis-password-secret" # Kubernetes Secret that stores the Redis password
-    existingSecretPasswordKey: "redis-password" # Key in the secret that holds the password
 # REQUIRED DEPENDENCIES VALUES ENDS HERE
 appName: confixa
 commonConfigMap: confixa-configmap
@@ -61,13 +51,35 @@ passwordRedisSecretsManagerName: redis-password-secret
 passwordRabbitMQSecretsManagerName: rabbitmq-password-secret
 apiGateway:
   enable: true
+  issueCron:
+    enable: true
+    name: confixa-issue-cron
+    containerName: confixa-issue-cron
+  monitorCleaner:
+    enable: true
+    name: confixa-monitor-cleaner
+    containerName: confixa-monitor-cleaner
+  bitbucketOauthToken: 
+    enable: true
+    name: confixa-bitbucket-oauth-token
+    containerName: confixa-bitbucket-oauth-token
+  oddSlug:
+    enable: true
+    name: confixa-odd-slug
+    containerName: confixa-odd-slug
+  evenSlug:
+    enable: true
+    name: confixa-even-slug
+    containerName: confixa-even-slug
+  argoCdCheckStatus:
+    enable: true
+    name: confixa-argocd-check-status
+    containerName: confixa-argocd-check-status
   name: confixa-api
   containerName: confixa-api
-  cronName: confixa-api-cron
-  cronContainerName: confixa-api-cron
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
-    tag: sha-413ec9a3ed9da2f1b660e56ad593bfeeb52b7abb
+    tag: 4d3a6f3481eb77796cc09a04f694e668c0aca85c
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
@@ -94,7 +106,7 @@ llmKumaApiGateway:
   containerName: confixa-llm-kuma-api
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma
-    tag: sha-80b288da85180c2683f24a9dcfeb34615be05710
+    tag: 92a696443cf10356ee9353126f09a8f88b969128
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
@@ -104,6 +116,7 @@ llmKumaApiGateway:
     protocol: TCP
   configMapRef: confixa-llm-kuma-api
   service:
+    name: confixa-llm-kuma-api
     protocol: TCP
     port: 80
     targetPort: 5002
@@ -114,7 +127,7 @@ frontend:
   containerName: confixa-frontend
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
-    tag: sha-e320e9bbcd4062afca7ddb68e50ff3754df1a98d
+    tag: 268789b9ca241f145ad578e681364c4287fc1397
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
@@ -135,3 +148,11 @@ frontend:
     port: 80
     targetPort: 5000
     type: ClusterIP
+# SERVICE URLS
+service:
+  url:
+    frontend: 'http://localhost:5000'
+    backend: 'http://localhost:5001'
+    argocd: 'http://localhost:3000'
+    kubeCost: 'http://localhost:9090'
+    clusterDashboard: 'http://localhost:9091'
