@@ -1,4 +1,4 @@
-{{- if .Values.apiGateway.monitorCleaner.enable }}
+{{- if (and (.Values.apiGateway.enable) (.Values.apiGateway.monitorCleaner.enable)) }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:

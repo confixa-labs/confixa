@@ -1,4 +1,4 @@
-{{- if .Values.apiGateway.issueCron.enable }}
+{{- if (and (.Values.apiGateway.enable) (.Values.apiGateway.issueCron.enable)) }}
 kind: Deployment
 apiVersion: apps/v1
 metadata:

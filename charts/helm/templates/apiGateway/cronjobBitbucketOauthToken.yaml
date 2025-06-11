@@ -1,4 +1,4 @@
-{{- if .Values.apiGateway.bitbucketOauthToken.enable }}
+{{- if (and (.Values.apiGateway.enable) (.Values.apiGateway.bitbucketOauthToken.enable)) }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
