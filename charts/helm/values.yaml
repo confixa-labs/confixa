@@ -127,7 +127,7 @@ frontend:
   containerName: confixa-frontend
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
-    tag: sha-9321ebb4a1b077d3c462ad1dde87d0ba18d9acab
+    tag: sha-4800c38d4e14c2a28a8e9ca17c878cf1c07affab
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa/confixa-gitops.git
