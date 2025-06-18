@@ -3,12 +3,14 @@
 </p>
 
 <div align="center">
+
 [![Discord](https://img.shields.io/badge/Discord-Join-blue?logo=discord)](https://discord.gg/Sn8XM6NHTs)
 [![Docs](https://img.shields.io/badge/Docs-Explore-blue)](https://docs.confixa.com)
 [![Website](https://img.shields.io/badge/Website-Visit-blue)](https://www.confixa.com)
 [![Artifact Hub](https://img.shields.io/badge/Artifact%20Hub-View-blue?logo=kubernetes)](https://artifacthub.io/packages/helm/confixa/confixa)
 [![Contributors](https://img.shields.io/badge/Contributors-View-blue)](./CONTRIBUTORS.md)
 [![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
+
 </div>
 
 <!-- [![Release](https://img.shields.io/badge/Release-Latest-blue)](https://github.com/your-user/your-repo/releases) -->
