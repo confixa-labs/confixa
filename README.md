@@ -268,7 +268,7 @@ Confixa’s contributors come from a range of backgrounds — engineers, designe
 
 Thanks to all our amazing contributors who make this project possible!
 
-👉 See [CONTRIBUTORS.md](./CONTRIBUTORS) for the full list.
+👉 See [CONTRIBUTORS.md](./CONTRIBUTORS.md) for the full list.
 
 ---
 
