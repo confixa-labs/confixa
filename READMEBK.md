@@ -131,4 +131,4 @@ This Helm chart is licensed under the **Private Use License for Helm Charts** by
 
 For detailed terms, see the [LICENSE](./LICENSE) file.
 
-For permissions beyond the scope of this license, contact us at [contact@confixa.com](mailto:contact@confixa.com).
+For permissions beyond the scope of this license, contact us at [confixa7@gmail.com](mailto:confixa7@gmail.com).

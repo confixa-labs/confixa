@@ -269,7 +269,7 @@ Thanks to all our amazing contributors who make this project possible!
 Security is a top priority for Confixa.
 If you discover a vulnerability, please report it privately and responsibly to:
 
-📧 contact@confixa.com
+📧 [confixa7@gmail.com](mailto:confixa7@gmail.com)
 
 We appreciate your discretion and your help in keeping Confixa safe for everyone.
 
