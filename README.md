@@ -3,23 +3,23 @@
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/Sn8XM6NHTs" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/Discord-Join-blue?logo=discord" alt="Discord">
+  <a href="https://discord.gg/Sn8XM6NHTs">
+    <img src="https://img.shields.io/badge/Discord-Join-blue?logo=discord" alt="Discord" />
   </a>
-  <a href="https://docs.confixa.com" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/Docs-Explore-blue" alt="Docs">
+  <a href="https://docs.confixa.com">
+    <img src="https://img.shields.io/badge/Docs-Explore-blue" alt="Docs" />
   </a>
-  <a href="https://www.confixa.com" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/Website-Visit-blue" alt="Website">
+  <a href="https://www.confixa.com">
+    <img src="https://img.shields.io/badge/Website-Visit-blue" alt="Website" />
   </a>
-  <a href="https://artifacthub.io/packages/helm/confixa/confixa" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/Artifact%20Hub-View-blue?logo=kubernetes" alt="Artifact Hub">
+  <a href="https://artifacthub.io/packages/helm/confixa/confixa">
+    <img src="https://img.shields.io/badge/Artifact%20Hub-View-blue?logo=kubernetes" alt="Artifact Hub" />
   </a>
-  <a href="./CONTRIBUTORS.md" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/Contributors-View-blue" alt="Contributors">
+  <a href="./CONTRIBUTORS.md">
+    <img src="https://img.shields.io/badge/Contributors-View-blue" alt="Contributors" />
   </a>
-  <a href="./LICENSE" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/License-MIT-blue" alt="License">
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
   </a>
 </p>
 <!-- [![Release](https://img.shields.io/badge/Release-Latest-blue)](https://github.com/your-user/your-repo/releases) -->
