@@ -1,6 +1,6 @@
 # Confixa
 
-[![Discord](https://img.shields.io/badge/Discord-Join-blue?logo=discord)](https://discord.gg/your-server)
+[![Discord](https://img.shields.io/badge/Discord-Join-blue?logo=discord)](https://discord.gg/Sn8XM6NHTs)
 [![Docs](https://img.shields.io/badge/Docs-Explore-blue)](https://docs.confixa.com)
 [![Website](https://img.shields.io/badge/Website-Visit-blue)](https://www.confixa.com)
 [![Artifact Hub](https://img.shields.io/badge/Artifact%20Hub-View-blue?logo=kubernetes)](https://artifacthub.io/packages/helm/confixa/confixa)
@@ -232,10 +232,10 @@ We’re passionate about growing a strong and collaborative community around Con
 
 Stay connected, get support, and collaborate with us through our community channels:
 
-- **Twitter**: [@ConfixaPlatform](https://twitter.com/ConfixaPlatform) — for announcements and quick updates
+- **Twitter**: [@ConfixaPlatform](https://twitter.com/@confixa7) — for announcements and quick updates
 - **Instagram**: [@ConfixaPlatform](https://instagram.com/ConfixaPlatform) — for stories, tips, and a glimpse behind the scenes
-- **Discord**: [Confixa Community](https://discord.gg/your-server) — for real-time collaboration, Q&A, and networking
-- **YouTube**: [Confixa Channel](https://youtube.com/ConfixaPlatform) — for demos, webinars, and technical walkthroughs
+- **Discord**: [Confixa Community](https://discord.gg/Sn8XM6NHTs) — for real-time collaboration, Q&A, and networking
+- **YouTube**: [Confixa Channel](https://youtube.com/@confixa) — for demos, webinars, and technical walkthroughs
 
 ---
 
