@@ -1,4 +1,6 @@
-# Confixa
+<p align="center">
+  <img src="https://storage.googleapis.com/confixa-files/logo-text.png" alt="Confixa Logo" height="100" />
+</p>
 
 [![Discord](https://img.shields.io/badge/Discord-Join-blue?logo=discord)](https://discord.gg/Sn8XM6NHTs)
 [![Docs](https://img.shields.io/badge/Docs-Explore-blue)](https://docs.confixa.com)
