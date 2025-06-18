@@ -83,7 +83,7 @@ This repository contains [Helm](https://helm.sh/) charts for deploying Confixa.
 
 1. Add Helm Repository
     ```bash
-     helm repo add confixa https://confixa.github.io/confixa-helm/charts
+     helm repo add confixa https://confixa-labs.github.io/confixa/charts
      helm repo update
     ```
 2. Install the Chart
