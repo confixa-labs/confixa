@@ -111,7 +111,6 @@ minikube start
 # or with custom resources
 minikube start --cpus=2 --memory=4096 --driver=docker
 ```
-----
 
 ### ⚙️ Helm Chart Usage (Local Development)
 
@@ -156,8 +155,6 @@ helm uninstall confixa --namespace confixa-test
 kubectl delete namespace confixa-test
 ```
 
-----
-
 ### ✅ Pre-commit Hooks
 
 Make sure [pre-commit](https://pre-commit.com/) is installed:
@@ -195,8 +192,6 @@ Test with a commit:
 git commit -m "Test pre-commit hook"
 ```
 
-----
-
 ### 🔁 Version Bump (Renovate)
 
 Use this script to bump chart versions:
@@ -204,8 +199,6 @@ Use this script to bump chart versions:
 ```bash
 ./scripts/renovate-bump-version.sh confixa
 ```
-
-----
 
 ### 🧪 CLI Usage
 
@@ -216,8 +209,6 @@ Use this script to bump chart versions:
 ./cli.sh bump-version         # Bump the chart version
 ./cli.sh next-version-branch  # Create next version branch
 ```
-
-----
 
 ### 🚀 Release Helper
 
