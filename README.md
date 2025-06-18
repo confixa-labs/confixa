@@ -118,14 +118,14 @@ minikube start --cpus=2 --memory=4096 --driver=docker
 Navigate to the `helm` directory and build dependencies:
 
 ```bash
-cd helm
+cd charts/helm
 helm dependency build
 ```
 
 In the `charts` directory:
 
 ```bash
-cd charts
+cd ..
 # Clean old index and package files if they exist
 rm -f index.yaml *.tgz
 
@@ -139,7 +139,7 @@ helm repo index .
 Return to the `helm` directory to update dependencies:
 
 ```bash
-cd ../helm
+cd helm
 helm dependency update
 ```
 
