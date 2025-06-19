@@ -1,0 +1,14 @@
+{{- if .Values.githubApi.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.githubApi.name }}
+spec:
+  selector:
+    app: {{ .Values.githubApi.name }}
+  ports:
+    - protocol: {{ .Values.githubApi.service.protocol }}
+      port: {{ .Values.githubApi.service.port }}
+      targetPort: {{ .Values.githubApi.service.targetPort }}
+  type: {{ .Values.githubApi.service.type }}
+{{- end }}

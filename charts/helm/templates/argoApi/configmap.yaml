@@ -1,0 +1,10 @@
+{{- if .Values.argoApi.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.argoApi.configMapRef }}
+data:
+  TASK_ID: "c1"
+  WORKER_TYPE: "consumer"
+  APM_SERVICE_NAME: 'confixa-argo-api'
+{{- end }}

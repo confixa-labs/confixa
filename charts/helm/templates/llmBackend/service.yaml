@@ -1,0 +1,14 @@
+{{- if .Values.llmBackend.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.llmBackend.name }}
+spec:
+  selector:
+    app: {{ .Values.llmBackend.name }}
+  ports:
+    - protocol: {{ .Values.llmBackend.service.protocol }}
+      port: {{ .Values.llmBackend.service.port }}
+      targetPort: {{ .Values.llmBackend.service.targetPort }}
+  type: {{ .Values.llmBackend.service.type }}
+{{- end }}

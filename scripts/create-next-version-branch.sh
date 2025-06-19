@@ -46,6 +46,7 @@ fi
 
 # Update the version in the Helm chart
 CHART_FILE="charts/helm/Chart.yaml"
+
 if [[ ! -f "$CHART_FILE" ]]; then
     log_error "Chart.yaml not found. Exiting."
     exit 1

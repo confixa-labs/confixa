@@ -1,0 +1,11 @@
+{{- if .Values.githubApi.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.githubApi.configMapRef }}
+data:
+  NODE_ENV: dev
+  TASK_ID: "c1"
+  WORKER_TYPE: "consumer"
+  APM_SERVICE_NAME: "confixa-github-api"
+{{- end }}

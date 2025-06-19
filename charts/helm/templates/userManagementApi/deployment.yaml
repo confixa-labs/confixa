@@ -1,0 +1,65 @@
+{{- if .Values.userManagementApi.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.userManagementApi.name }}
+  annotations:
+    {{- toYaml .Values.userManagementApi.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.userManagementApi.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.userManagementApi.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.userManagementApi.name }}
+    spec:
+      containers:
+        - name: {{ .Values.userManagementApi.containerName }}
+          image: "{{ .Values.userManagementApi.image.repository }}:{{ .Values.userManagementApi.image.tag }}"
+          imagePullPolicy: {{ .Values.userManagementApi.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.userManagementApi.ports.containerPort }}
+              protocol: {{ .Values.userManagementApi.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.userManagementApi.configMapRef }}
+            - configMapRef:
+                name: {{ .Values.commonConfigMap }}
+          env:
+            - name: REDIS_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: redisPassword
+            - name: ARGOCD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: argocdPassword
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: rabbitmqPassword
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbRootPassword
+            - name: MONGODB_USERS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbUsersPassword
+          resources:
+            requests:
+              memory: {{ .Values.userManagementApi.resources.requests.memory }}
+              cpu: {{ .Values.userManagementApi.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.userManagementApi.resources.limits.memory }}
+              cpu: {{ .Values.userManagementApi.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "userManagementApi.readinessProbe" . | nindent 12 }}
+{{- end }}

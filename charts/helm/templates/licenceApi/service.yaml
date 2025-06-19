@@ -1,0 +1,14 @@
+{{- if .Values.licenceApi.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.licenceApi.name }}
+spec:
+  selector:
+    app: {{ .Values.licenceApi.name }}
+  ports:
+    - protocol: {{ .Values.licenceApi.service.protocol }}
+      port: {{ .Values.licenceApi.service.port }}
+      targetPort: {{ .Values.licenceApi.service.targetPort }}
+  type: {{ .Values.licenceApi.service.type }}
+{{- end }}

@@ -1,0 +1,14 @@
+{{- if .Values.argoApi.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.argoApi.name }}
+spec:
+  selector:
+    app: {{ .Values.argoApi.name }}
+  ports:
+    - protocol: {{ .Values.argoApi.service.protocol }}
+      port: {{ .Values.argoApi.service.port }}
+      targetPort: {{ .Values.argoApi.service.targetPort }}
+  type: {{ .Values.argoApi.service.type }}
+{{- end }}

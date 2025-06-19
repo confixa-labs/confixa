@@ -1,0 +1,63 @@
+{{- if .Values.licenceApi.enable }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.licenceApi.name }}
+  annotations:
+    {{- toYaml .Values.licenceApi.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.licenceApi.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.licenceApi.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.licenceApi.name }}
+    spec:
+      containers:
+        - name: {{ .Values.licenceApi.containerName }}
+          image: "{{ .Values.licenceApi.image.repository }}:{{ .Values.licenceApi.image.tag }}"
+          imagePullPolicy: {{ .Values.licenceApi.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.licenceApi.ports.containerPort }}
+              protocol: {{ .Values.licenceApi.ports.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.licenceApi.configMapRef }}
+          env:
+            - name: REDIS_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: redisPassword
+            - name: ARGOCD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: argocdPassword
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: rabbitmqPassword
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbRootPassword
+            - name: MONGODB_USERS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passwordSecretsManagerName }}
+                  key: mongodbUsersPassword
+          resources:
+            requests:
+              memory: {{ .Values.licenceApi.resources.requests.memory }}
+              cpu: {{ .Values.licenceApi.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.licenceApi.resources.limits.memory }}
+              cpu: {{ .Values.licenceApi.resources.limits.cpu }}
+          readinessProbe:
+            {{- include "licenceApi.readinessProbe" . | nindent 12 }}
+{{- end }}

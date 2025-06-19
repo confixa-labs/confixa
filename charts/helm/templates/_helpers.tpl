@@ -11,6 +11,7 @@ tcpSocket:
   port: {{ .Values.apiGateway.ports.containerPort }}
 timeoutSeconds: 1
 {{- end }}
+
 {{/*
 create readinessProbe for frontend deployment
 */}}
