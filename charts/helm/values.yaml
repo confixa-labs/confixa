@@ -82,7 +82,7 @@ apiGateway:
     tag: sha-b98c6bff0e25c7776b28859caa2dacdddfa300f2
     pullPolicy: Always
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   resources:
     requests:
@@ -109,7 +109,7 @@ llmKumaApiGateway:
     tag: sha-9f7d548a87919fa2f7cf6182d37094ef25b3f9a6
     pullPolicy: Always
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   ports:
     containerPort: 5002
@@ -130,7 +130,7 @@ frontend:
     tag: sha-4800c38d4e14c2a28a8e9ca17c878cf1c07affab
     pullPolicy: Always
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   resources:
     requests:

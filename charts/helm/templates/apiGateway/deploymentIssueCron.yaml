@@ -4,7 +4,7 @@ apiVersion: apps/v1
 metadata:
   name: {{ .Values.apiGateway.issueCron.name }}
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
 spec:
   replicas: 1
   selector:

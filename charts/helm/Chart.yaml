@@ -1,7 +1,7 @@
 # This file is part of the Confixa Helm chart.
 # Copyright (c) 2024 Wohlig Transformation Pvt. Ltd.
 # Licensed under the Private Use License for Helm Charts.
-# For terms, see the LICENSE file in the repository or contact contact@confixa.com.
+# For terms, see the LICENSE file in the repository or contact confixa7@gmail.com.
 
 apiVersion: v2
 name: Confixa

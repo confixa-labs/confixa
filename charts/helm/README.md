@@ -17,7 +17,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| apiGateway.annotations.git | string | `"https://github.com/confixa/confixa-gitops.git"` |  |
+| apiGateway.annotations.git | string | `"https://github.com/confixa-labs/confixa.git"` |  |
 | apiGateway.argoCdCheckStatus.containerName | string | `"confixa-argocd-check-status"` |  |
 | apiGateway.argoCdCheckStatus.enable | bool | `true` |  |
 | apiGateway.argoCdCheckStatus.name | string | `"confixa-argocd-check-status"` |  |
@@ -32,7 +32,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.evenSlug.name | string | `"confixa-even-slug"` |  |
 | apiGateway.image.pullPolicy | string | `"Always"` |  |
 | apiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api"` |  |
-| apiGateway.image.tag | string | `"4d3a6f3481eb77796cc09a04f694e668c0aca85c"` |  |
+| apiGateway.image.tag | string | `"sha-b98c6bff0e25c7776b28859caa2dacdddfa300f2"` |  |
 | apiGateway.issueCron.containerName | string | `"confixa-issue-cron"` |  |
 | apiGateway.issueCron.enable | bool | `true` |  |
 | apiGateway.issueCron.name | string | `"confixa-issue-cron"` |  |
@@ -56,13 +56,13 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.service.type | string | `"ClusterIP"` |  |
 | appName | string | `"confixa"` |  |
 | commonConfigMap | string | `"confixa-configmap"` |  |
-| frontend.annotations.git | string | `"https://github.com/confixa/confixa-gitops.git"` |  |
+| frontend.annotations.git | string | `"https://github.com/confixa-labs/confixa.git"` |  |
 | frontend.configMapRef | string | `"confixa-frontend"` |  |
 | frontend.containerName | string | `"confixa-frontend"` |  |
 | frontend.enable | bool | `true` |  |
 | frontend.image.pullPolicy | string | `"Always"` |  |
 | frontend.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend"` |  |
-| frontend.image.tag | string | `"268789b9ca241f145ad578e681364c4287fc1397"` |  |
+| frontend.image.tag | string | `"sha-4800c38d4e14c2a28a8e9ca17c878cf1c07affab"` |  |
 | frontend.name | string | `"confixa-frontend"` |  |
 | frontend.ports.containerPort | int | `5000` |  |
 | frontend.ports.protocol | string | `"TCP"` |  |
@@ -75,13 +75,13 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | frontend.service.protocol | string | `"TCP"` |  |
 | frontend.service.targetPort | int | `5000` |  |
 | frontend.service.type | string | `"ClusterIP"` |  |
-| llmKumaApiGateway.annotations.git | string | `"https://github.com/confixa/confixa-gitops.git"` |  |
+| llmKumaApiGateway.annotations.git | string | `"https://github.com/confixa-labs/confixa.git"` |  |
 | llmKumaApiGateway.configMapRef | string | `"confixa-llm-kuma-api"` |  |
 | llmKumaApiGateway.containerName | string | `"confixa-llm-kuma-api"` |  |
 | llmKumaApiGateway.enable | bool | `true` |  |
 | llmKumaApiGateway.image.pullPolicy | string | `"Always"` |  |
 | llmKumaApiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma"` |  |
-| llmKumaApiGateway.image.tag | string | `"92a696443cf10356ee9353126f09a8f88b969128"` |  |
+| llmKumaApiGateway.image.tag | string | `"sha-9f7d548a87919fa2f7cf6182d37094ef25b3f9a6"` |  |
 | llmKumaApiGateway.name | string | `"confixa-llm-kuma-api"` |  |
 | llmKumaApiGateway.ports.containerPort | int | `5002` |  |
 | llmKumaApiGateway.ports.protocol | string | `"TCP"` |  |

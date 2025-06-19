@@ -113,7 +113,7 @@ process_version() {
 update_chart_version() {
     local new_version=$1
     local dry_run=$2
-    local chart_file="charts/confixa/Chart.yaml"
+    local chart_file="charts/helm/Chart.yaml"
 
     if [[ ! -f "$chart_file" ]]; then
         log_error "Chart.yaml not found at $chart_file"
@@ -249,11 +249,11 @@ If the DCO action in the integration test fails, one or more of your commits are
 
 # Checklist
 
-* [ ] I have bumped the chart version according to [versioning](https://github.com/confixa/confixa-as-a-helm/blob/main/CONTRIBUTING.md#versioning)
-* [ ] I have updated the documentation according to [documentation](https://github.com/confixa/confixa-as-a-helm/blob/main/CONTRIBUTING.md#documentation)
-* [ ] I have updated the chart changelog with all the changes that come with this pull request according to [changelog](https://github.com/confixa/confixa-as-a-helm/blob/main/CONTRIBUTING.md#changelog).
+* [ ] I have bumped the chart version according to [versioning](https://github.com/confixa-labs/confixa/blob/main/CONTRIBUTING.md#versioning)
+* [ ] I have updated the documentation according to [documentation](https://github.com/confixa-labs/confixa/blob/main/CONTRIBUTING.md#documentation)
+* [ ] I have updated the chart changelog with all the changes that come with this pull request according to [changelog](https://github.com/confixa-labs/confixa/blob/main/CONTRIBUTING.md#changelog).
 * [ ] Any new values are backwards compatible and/or have sensible default.
-* [ ] I have signed off all my commits as required by [DCO](https://github.com/confixa/confixa-as-a-helm/blob/main/CONTRIBUTING.md).
+* [ ] I have signed off all my commits as required by [DCO](https://github.com/confixa-labs/confixa/blob/main/CONTRIBUTING.md).
 * [ ] My build is green [troubleshooting builds](https://example.com/build-status).
 
 <!-- Changes are automatically published when merged to 'main'. They are not published on branches. -->
@@ -349,7 +349,7 @@ create_release() {
     fi
 
     # Get and validate current version
-    local chart_file="charts/confixa/Chart.yaml"
+    local chart_file="charts/helm/Chart.yaml"
     [[ ! -f "$chart_file" ]] && { log_error "Chart.yaml not found"; exit 1; }
 
     local current_version=$(grep '^version:' "$chart_file" | awk '{print $2}')
