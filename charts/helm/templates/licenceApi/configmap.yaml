@@ -1,8 +1,0 @@
-{{- if .Values.licenceApi.enable }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Values.licenceApi.configMapRef }}
-data:
-  NODE_ENV: dev
-{{- end }}

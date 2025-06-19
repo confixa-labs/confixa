@@ -1,8 +1,0 @@
-{{- if .Values.oauthApi2.enable }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Values.oauthApi2.configMapRef }}
-data:
-  NODE_ENV: dev
-{{- end }}
