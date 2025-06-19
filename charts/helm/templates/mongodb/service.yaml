@@ -1,0 +1,13 @@
+{{- if .Values.mongodb.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name:  {{ .Values.mongodb.service.name }}
+spec:
+  selector:
+    app: {{ .Values.mongodb.service.name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.mongodb.service.port }}
+      targetPort: {{ .Values.mongodb.service.port }}
+{{- end }}

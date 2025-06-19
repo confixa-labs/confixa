@@ -3,6 +3,7 @@
 .DS_Store
 
 ### Helm ###
+**/charts/helm/charts/*.tgz
 **/charts/*.tgz
 
 *.local.md

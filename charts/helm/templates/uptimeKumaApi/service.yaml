@@ -1,14 +1,14 @@
-{{- if .Values.uptimeKumaApi.enable }}
+{{- if .Values.llmKumaApiGateway.enable }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.uptimeKumaApi.name }}
+  name: {{ .Values.llmKumaApiGateway.name }}
 spec:
   selector:
-    app: {{ .Values.uptimeKumaApi.name }}
+    app: {{ .Values.llmKumaApiGateway.name }}
   ports:
-    - protocol: {{ .Values.uptimeKumaApi.service.protocol }}
-      port: {{ .Values.uptimeKumaApi.service.port }}
-      targetPort: {{ .Values.uptimeKumaApi.service.targetPort }}
-  type: {{ .Values.uptimeKumaApi.service.type }}
+    - protocol: {{ .Values.llmKumaApiGateway.service.protocol }}
+      port: {{ .Values.llmKumaApiGateway.service.port }}
+      targetPort: {{ .Values.llmKumaApiGateway.service.targetPort }}
+  type: {{ .Values.llmKumaApiGateway.service.type }}
 {{- end }}

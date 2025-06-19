@@ -3,4 +3,88 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.commonConfigMap }}
 data:
-  APP_NAME: framework
+  APP_NAME: 'confixa backend microservices'
+  NODE_ENV: 'production'
+  ADD_BASEURL_PREFIX: 'true'
+  BASE_URL: ''
+  PORT: '5001'
+  PYTHON_PORT: '5002'
+  FLASK_ENV: 'production'
+
+  # REDIS
+  REDIS_INIT: 'true'
+  REDIS_PORT: '6379'
+  REDIS_DB: ''
+  
+  # SECURITY
+  keyCloakInit: 'false'
+
+  # Signin Flow
+  AUTHENTICATION_INTERNAL_ALLOW: 'true'
+  JWT_ALGORITHM: 'HS256'
+  JWT_EXPIRY_IN_SECONDS: '86400000'
+  
+  # OPEN AI
+  GPT_MODEL_NAME: 'gpt-4-0125-preview'
+
+  # MONGODB
+  MONGO_INIT: 'true'
+  
+  # RABBITMQ
+  TASK_ID: "c1"
+  ACK_TASK_ID: "ca1"
+  WORKER_TYPE: "consumer"
+  RABBITMQ_INIT : 'true'
+  RABBITMQ_PROTOCOL : "amqp"
+  RABBITMQ_USER : "admin"
+  RABBITMQ_PORT : '5672'
+  RABBITMQ_VHOST : "/"
+
+  # MONITORING
+  # GCP
+  MONITORING_URL : 'https://monitoring.googleapis.com/v3/'
+  MONITORING_DURATION : 7d
+  MONITORING_SCOPE : 'https://www.googleapis.com/auth/cloud-platform'
+
+  # HELM VERSION
+  ARTIFACT_HUB_URL : 'https://artifacthub.io/api/v1/packages'
+  
+  # MICROSERVICE URL
+  FRONTEND_URL: '{{ .Values.service.url.frontend }}'
+  BACKEND_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_GITHUB_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_ARGO_API_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_ARGO_API_DOMAIN_BASED_URL: '{{ .Values.service.url.backend }}'
+  CONFIXA_KUBE_COST_API_URL:  '{{ .Values.service.url.kubeCost }}'
+  CLUSTER_MANAGEMENT_DASHBOARD_URL: '{{ .Values.service.url.clusterDashboard }}'
+
+  # MICROSERVICE URL PATHNAME
+  CONFIXA_LLM_KUMA_FLASK_PATHNAME: 'getLLMResponse'
+  CLUSTER_MANAGEMENT_DASHBOARD_PATHNAME: '/#/workloads'
+  CONFIXA_ARGO_API_PATHNAME: '/login' 
+  CONFIXA_KUBE_COST_API_PATHNAME: '/overview'
+  
+  # VERBIAGE TEXT
+  WORKFLOW_MESSAGE: 'Workflow automation enabled through Confixa.'
+
+  # UPTIME KUMA
+  UPTIME_KUMA_RETRY_INTERVAL: '300'
+  UPTIME_KUMA_MAX_RETRIES: '100000'
+
+  # APM
+  APM_ENABLE: 'false'
+
+  # NODE-EMAILER
+  MAILER_INIT: 'true'
+
+  # GITHUB JOB RUNS ON
+  JOB_RUNS_ON_TYPE: 'ubuntu'
+  JOB_RUNS_ON_VERSION: '24.04'
+
+  # TOOLS HANDLING ON/OFF
+  PARTIAL_ON_BOARDING: "false"
+  HEALTH_CHECK_ENABLED: "false"
+  
+  # DEBUG FOR PYTHON
+  PYTHON_DEBUGGER: 'false'

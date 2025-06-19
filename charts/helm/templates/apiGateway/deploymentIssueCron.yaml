@@ -1,22 +1,22 @@
-{{- if .Values.apiGateway.enable }}
+{{- if (and (.Values.apiGateway.enable) (.Values.apiGateway.issueCron.enable)) }}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: {{ .Values.apiGateway.name }}
+  name: {{ .Values.apiGateway.issueCron.name }}
   annotations:
-    {{- toYaml .Values.apiGateway.annotations | nindent 4 }}
+    git: https://github.com/confixa-labs/confixa.git
 spec:
-  replicas: {{ .Values.apiGateway.replicas }}
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.apiGateway.name }}
+      app: {{ .Values.apiGateway.issueCron.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.apiGateway.name }}
+        app: {{ .Values.apiGateway.issueCron.name }}
     spec:
       containers:
-        - name: {{ .Values.apiGateway.containerName }}
+        - name: {{ .Values.apiGateway.issueCron.containerName }}
           image: "{{ .Values.apiGateway.image.repository }}:{{ .Values.apiGateway.image.tag }}"
           imagePullPolicy: {{ .Values.apiGateway.image.pullPolicy }}
           ports:
@@ -26,6 +26,10 @@ spec:
             - configMapRef:
                 name: {{ .Values.commonConfigMap }}
           env:
+            - name: ISSUE_CRON_INIT
+              value: 'true'
+            - name: ISSUE_CRON_SCHEDULE
+              value: '*/10 * * * *'
             - name: REDIS_AUTH_PASS
               valueFrom:
                 secretKeyRef:
@@ -56,13 +60,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.passwordSecretsManagerName }}
                   key: llmKumaHost
-          resources:
-            requests:
-              memory: {{ .Values.apiGateway.resources.requests.memory }}
-              cpu: {{ .Values.apiGateway.resources.requests.cpu }}
-            limits:
-              memory: {{ .Values.apiGateway.resources.limits.memory }}
-              cpu: {{ .Values.apiGateway.resources.limits.cpu }}
           readinessProbe:
             {{- include "apiGateway.readinessProbe" . | nindent 12 }}
 {{- end }}

@@ -1,356 +1,125 @@
 # REQUIRED DEPENDENCIES VALUES DO NOT REMOVE
 redis:
-  enabled: true
+  enable: true
   auth:
     enabled: true
-    password: "{{ randAlphaNum 16 | b64enc }}"
+    existingSecret: "redis-password-secret"
+  service:
+    name: "confixa-redis-master"
   master:
     nodeSelector: {}
   replica:
     replicaCount: 1
     nodeSelector: {}
-argocd:
-  enable: false
 rabbitmq:
   enable: true
+  service:
+    name: "confixa-rabbitmq"
   auth:
     username: admin
+    existingPasswordSecret: "rabbitmq-password-secret"
 mongodb:
   enable: true
+  name: "confixa-mongodb"
+  containerName: "confixa-mongodb"
+  image:
+    repository: mongo
+    tag: "8.0.5" # Supports both x86_64 and ARM64
+    pullPolicy: IfNotPresent
+  service:
+    name: "confixa-mongodb"
+    type: ClusterIP
+    port: 27017
   auth:
-    rootPassword: "{{ randAlphaNum 16 | b64enc }}"
     rootUser: root
-    usernames: ["confixaadmin"]
-    passwords: ["{{ randAlphaNum 16 | b64enc }}"]
+    rootDatabase: "confixa"
+    usernames: ["confixa-admin"]
+    passwords: ["Sm2dnl23dwe7lerPDD"]
     databases: ["confixa"]
-kubernetesdashboard:
-  enabled: true
-  metricsScraper:
-    enabled: false
-  kong:
-    deployment:
-      name: admin-user
-      automountServiceAccountToken: true
-    env:
-      ADMIN_LISTEN: off
-      PROXY_LISTEN: |
-        0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2
-        ssl
-      PORT_MAPS: 80:8000, 443:8443
-    proxy:
-      type: ClusterIP
-      http:
-        enabled: true
-kubecost:
-  enable: false
-  # kubecostToken: Add the Token for Enterprise users
-uptimekuma:
-  enable: false
-contour:
-  enable: false
-oauth2proxy: 
-  enable: true
-  
+  persistence:
+    enabled: true
+    size: 8Gi
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 # REQUIRED DEPENDENCIES VALUES ENDS HERE
 appName: confixa
 commonConfigMap: confixa-configmap
 passwordSecretsManagerName: confixa-passwords-secret
+passwordRedisSecretsManagerName: redis-password-secret
+passwordRabbitMQSecretsManagerName: rabbitmq-password-secret
 apiGateway:
   enable: true
+  issueCron:
+    enable: true
+    name: confixa-issue-cron
+    containerName: confixa-issue-cron
+  monitorCleaner:
+    enable: true
+    name: confixa-monitor-cleaner
+    containerName: confixa-monitor-cleaner
+  bitbucketOauthToken:
+    enable: true
+    name: confixa-bitbucket-oauth-token
+    containerName: confixa-bitbucket-oauth-token
+  oddSlug:
+    enable: true
+    name: confixa-odd-slug
+    containerName: confixa-odd-slug
+  evenSlug:
+    enable: true
+    name: confixa-even-slug
+    containerName: confixa-even-slug
+  argoCdCheckStatus:
+    enable: true
+    name: confixa-argocd-check-status
+    containerName: confixa-argocd-check-status
   name: confixa-api
   containerName: confixa-api
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
-    tag: e87e971b97fd554a4da7f9fd3d8ed63960578189
+    tag: sha-b98c6bff0e25c7776b28859caa2dacdddfa300f2
     pullPolicy: Always
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   resources:
     requests:
       cpu: 100m
       memory: 128Mi
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 750m
+      memory: 1024Mi
   ports:
-    containerPort: 3000
+    containerPort: 5001
     protocol: TCP
   configMapRef: confixa-api
   service:
     protocol: TCP
     port: 80
-    targetPort: 3000
+    targetPort: 5001
     type: ClusterIP
-argoApi:
-  enable: false
-  name: argo-api
-  containerName: argo-api
+llmKumaApiGateway:
+  enable: true
+  name: confixa-llm-kuma-api
+  containerName: confixa-llm-kuma-api
   image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-argo-api
-    tag: 8d02a6dd2020906ca8cfc79eb23e2e977a87ec6d
+    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma
+    tag: sha-9f7d548a87919fa2f7cf6182d37094ef25b3f9a6
     pullPolicy: Always
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
   replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
   ports:
-    containerPort: 3000
+    containerPort: 5002
     protocol: TCP
-  configMapRef: argo-api
+  configMapRef: confixa-llm-kuma-api
   service:
+    name: confixa-llm-kuma-api
     protocol: TCP
     port: 80
-    targetPort: 3000
-    type: ClusterIP
-githubActionsApi:
-  enable: false
-  name: confixa-github-actions-api
-  containerName: confixa-github-actions-api
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-github-actions-api
-    tag: 6f0557c9680738af943ac1c86216f4d66402cf50
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3000
-    protocol: TCP
-  configMapRef: confixa-github-actions-api
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3000
-    type: ClusterIP
-githubApi:
-  enable: false
-  name: confixa-github-api
-  containerName: confixa-github-api
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-github-api
-    tag: 26e9e7dbcb882aac197e129240e34ca69d275028
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3000
-    protocol: TCP
-  configMapRef: confixa-github-api
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3000
-    type: ClusterIP
-licenceApi:
-  enable: false
-  name: confixa-licence-api
-  containerName: confixa-licence-api
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-license-api
-    tag: 26e9e7dbcb882aac197e129240e34ca69d275028
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3008
-    protocol: TCP
-  configMapRef: confixa-licence-api
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3008
-    type: ClusterIP
-oauthApp:
-  enable: false
-  name: confixa-oauth-app
-  containerName: confixa-oauth-app
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/confixa-oauth-app
-    tag: 1199e5eba9e5b2210089a379386a42d29a85857d
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3018
-    protocol: TCP
-  configMapRef: confixa-oauth-app
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3018
-    type: ClusterIP
-supportApi:
-  enable: false
-  name: confixa-support-api
-  containerName: confixa-support-api
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/confixa-support-api
-    tag: 64857c1406e2c2510fbad993c7641163ba2f7b61
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3000
-    protocol: TCP
-  configMapRef: confixa-support-api
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3000
-    type: ClusterIP
-uptimeKumaApi:
-  enable: false
-  name: confixa-uptime-kuma
-  containerName: confixa-uptime-kuma
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/confixa-uptime-kuma
-    tag: a6dd5fccdc6cf256def93893814e75ceef490e10
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 5050
-    protocol: TCP
-  configMapRef: confixa-uptime-kuma
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 5050
-    type: ClusterIP
-userManagementApi:
-  enable: false
-  name: confixa-user-management
-  containerName: confixa-user-management
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-user-management
-    tag: ca87d34cfb467b9fd14ace984b83a9482116aab8
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3000
-    protocol: TCP
-  configMapRef: confixa-user-management
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3000
-    type: ClusterIP
-oauthApi2:
-  enable: false
-  name: confixa-oauth-app
-  containerName: confixa-oauth-app
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/confixa-oauth-app
-    tag: 1199e5eba9e5b2210089a379386a42d29a85857d
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixa/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 3019
-    protocol: TCP
-  configMapRef: confixa-oauth-app
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 3019
-    type: ClusterIP
-llmBackend:
-  enable: false
-  name: confixa-backend-llm
-  containerName: confixa-backend-llm
-  image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-backend-llm
-    tag: 55eecec4a4ac4fb943d8d7be418b454b1989f920
-    pullPolicy: Always
-  annotations:
-    git: https://github.com/confixaconfixa-oauth-app/confixa-gitops.git
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  ports:
-    containerPort: 5011
-    protocol: TCP
-  configMapRef: confixa-backend-llm
-  service:
-    protocol: TCP
-    port: 80
-    targetPort: 5011
+    targetPort: 5002
     type: ClusterIP
 frontend:
   enable: true
@@ -358,10 +127,10 @@ frontend:
   containerName: confixa-frontend
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
-    tag: 25b75203f636631c1eba55fd5a14e94bc85f638c
+    tag: sha-4800c38d4e14c2a28a8e9ca17c878cf1c07affab
     pullPolicy: Always
   annotations:
-    git: https://github.com/confixa/confixa-gitops.git
+    git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   resources:
     requests:
@@ -371,11 +140,19 @@ frontend:
       cpu: 500m
       memory: 512Mi
   ports:
-    containerPort: 3001
+    containerPort: 5000
     protocol: TCP
   configMapRef: confixa-frontend
   service:
     protocol: TCP
     port: 80
-    targetPort: 3001
+    targetPort: 5000
     type: ClusterIP
+# SERVICE URLS
+service:
+  url:
+    frontend: 'http://localhost:5000'
+    backend: 'http://localhost:5001'
+    argocd: 'http://localhost:3000'
+    kubeCost: 'http://localhost:9090'
+    clusterDashboard: 'http://localhost:9091'

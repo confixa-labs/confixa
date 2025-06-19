@@ -5,23 +5,5 @@ dependencies:
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
   version: 14.1.4
-- name: mongodb
-  repository: https://charts.bitnami.com/bitnami
-  version: 16.0.3
-- name: argo-cd
-  repository: https://charts.bitnami.com/bitnami
-  version: 7.0.20
-- name: cost-analyzer
-  repository: https://kubecost.github.io/cost-analyzer
-  version: 2.4.3
-- name: uptime-kuma
-  repository: https://dirsigler.github.io/uptime-kuma-helm
-  version: 2.21.1
-- name: contour
-  repository: https://charts.bitnami.com/bitnami
-  version: 19.4.0
-- name: oauth2-proxy
-  repository: https://oauth2-proxy.github.io/manifests
-  version: 7.9.2
-digest: sha256:57a79a964552dff0a18e36dd84d60295fd9b9fb8bcbdef4c1aa4ef39c389b396
-generated: "2025-01-22T11:54:45.015513+05:30"
+digest: sha256:678a730e17e312eae4d9c6490de8ce7d09dddf35d971eb56947e48cebfecf8d0
+generated: "2025-06-09T12:54:12.134199+05:30"
