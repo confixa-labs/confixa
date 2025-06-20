@@ -239,10 +239,10 @@ We’re passionate about growing a strong and collaborative community around Con
 
 Stay connected, get support, and collaborate with us through our community channels:
 
-- **Twitter**: [@ConfixaPlatform](https://twitter.com/@confixa7) — for announcements and quick updates
-- **Instagram**: [@ConfixaPlatform](https://instagram.com/ConfixaPlatform) — for stories, tips, and a glimpse behind the scenes
-- **Discord**: [Confixa Community](https://discord.gg/Sn8XM6NHTs) — for real-time collaboration, Q&A, and networking
-- **YouTube**: [Confixa Channel](https://youtube.com/@confixa) — for demos, webinars, and technical walkthroughs
+- **Twitter**: [Platform](https://twitter.com/@confixa7) — for announcements and quick updates
+- **Instagram**: [Platform](https://instagram.com/ConfixaPlatform) — for stories, tips, and a glimpse behind the scenes
+- **Discord**: [Community](https://discord.gg/Sn8XM6NHTs) — for real-time collaboration, Q&A, and networking
+- **YouTube**: [Channel](https://youtube.com/@confixa7) — for demos, webinars, and technical walkthroughs
 
 ---
 
