@@ -143,8 +143,8 @@ Make sure:
 
 ## 🙋 Need Help?
 
-- 💬 [Discord](https://discord.gg/your-server)
-- 📧 [contact@confixa.com](mailto:contact@confixa.com)
+- 💬 [Discord](https://discord.gg/Sn8XM6NHTs)
+- 📧 [confixa7@gmail.com](mailto:confixa7@gmail.com)
 
 ---
 
