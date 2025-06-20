@@ -1,7 +1,7 @@
 
-# 🤝 Contributing to Confixa Helm Charts
+# 🤝 Contributing to Confixa Charts
 
-Thank you for your interest in contributing to the Confixa Helm charts!  
+Thank you for your interest in contributing to the Confixa charts!  
 We welcome all contributions — whether it’s fixing bugs, improving documentation, adding features, or enhancing chart quality.
 
 This repository contains official [Helm](https://helm.sh) charts for deploying [Confixa](https://www.confixa.com) on Kubernetes.  
