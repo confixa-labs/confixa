@@ -148,6 +148,47 @@ frontend:
     port: 80
     targetPort: 5000
     type: ClusterIP
+watcher:
+  enable: false
+  name: confixa-watcher
+  containerName: confixa-watcher
+  image:
+    repository: asia-south1-docker.pkg.dev/confixa-rnd/custom-runner/configmap-updates-watcher
+    tag: sha-1d2d767afc82565a5f7278d7dd92c5a919a763ce
+  annotations:
+    git: https://github.com/confixa-labs/confixa.git
+  replicas: 1
+  secret:
+    secretRef:
+      variables: confixa-watcher-variables
+      file: confixa-watcher
+    variables:
+      configMapName: confixa-frontend
+      deploymentName: confixa-frontend
+      customExec: "true"
+      execPath: /app/frontend-update.sh
+      namespace: backend
+      repoUrl: https://github.com/confixa-labs/Confixa-FrontEnd.git
+      branch: uat
+      serviceAccountKeyPath: /tmp/service-account.json
+      dockerRegion: asia-south1-docker.pkg.dev
+      gcrProjectId: confixa-rnd
+      dockerImageName: custom-runner/public-build
+      containerName: confixa-frontend
+    file:
+      mountPath: /mnt/secrets
+      secretInfo: '{key:"value"}'
+  serviceAccount:
+    serviceAccountRef: confixa-configmap-watcher
+    volumeRef: confixa-watcher-volume
+  docker:
+    dockerRef: docker-socket
+    dockerType: Socket
+    mountPath: /var/run/docker.sock
+  role:
+    roleRef: confixa-watcher-role
+  roleBinding:
+    roleBindingRef: confixa-watcher-role-binding
 # SERVICE URLS
 service:
   url:
