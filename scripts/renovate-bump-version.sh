@@ -17,7 +17,7 @@ echo "Processing chart: $chartName"
 echo "----------------------------------------"
 
 # Define the chart directory
-parentDir="charts/${chartName}"
+parentDir="./charts/${chartName}"
 
 # Check if the Chart.yaml file exists
 chartFile="${parentDir}/Chart.yaml"

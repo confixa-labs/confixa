@@ -113,7 +113,7 @@ process_version() {
 update_chart_version() {
     local new_version=$1
     local dry_run=$2
-    local chart_file="charts/helm/Chart.yaml"
+    local chart_file="./charts/helm/Chart.yaml"
 
     if [[ ! -f "$chart_file" ]]; then
         log_error "Chart.yaml not found at $chart_file"
@@ -349,7 +349,7 @@ create_release() {
     fi
 
     # Get and validate current version
-    local chart_file="charts/helm/Chart.yaml"
+    local chart_file="./charts/helm/Chart.yaml"
     [[ ! -f "$chart_file" ]] && { log_error "Chart.yaml not found"; exit 1; }
 
     local current_version=$(grep '^version:' "$chart_file" | awk '{print $2}')
