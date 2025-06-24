@@ -220,16 +220,17 @@ Use this script to bump chart versions:
 ### 🚀 Release Helper
 
 ```bash
+cd scripts
 # Create a minor release and PR with message and release notes
-./scripts/release.sh -t minor -m "New feature release" -b develop -n release-notes.md -r -p beta
+./release.sh -t minor -m "New feature release" -b develop -n release-notes.md -r -p beta
 
 # Finalize release by removing postfix
-./scripts/release.sh -m "Release version" -r
+./release.sh -m "Release version" -r
 
 # Trigger releases by type
-./scripts/release.sh -t minor -m "New feature release" -r
-./scripts/release.sh -t major -m "Major version release" -r
-./scripts/release.sh -t patch -m "Patch release" -r
+./release.sh -t minor -m "New feature release" -r
+./release.sh -t major -m "Major version release" -r
+./release.sh -t patch -m "Patch release" -r
 ```
 ---
 
