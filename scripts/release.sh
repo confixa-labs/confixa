@@ -20,7 +20,7 @@ log_info() { echo "$1"; }
 # Help function
 show_help() {
     cat << EOF
-Usage: ./release.sh [options]
+Usage: ./scripts/release.sh [options]
 
 Options:
   -t, --type      Version bump type (patch|minor|major) [optional when -r is used]
@@ -34,9 +34,9 @@ Options:
   --no-push      Skip pushing changes to remote [default: false]
 
 Examples:
-  ./release.sh -t minor -m "New feature release" -b develop -n release-notes.md -r -p beta
-  ./release.sh -m "Release version" -r  # Removes postfix and creates release
-  ./release.sh -t patch -m "Bug fix" -d  # Dry run a patch release
+  ./scripts/release.sh -t minor -m "New feature release" -b develop -n release-notes.md -r -p beta
+  ./scripts/release.sh -m "Release version" -r  # Removes postfix and creates release
+  ./scripts/release.sh -t patch -m "Bug fix" -d  # Dry run a patch release
 EOF
 }
 
