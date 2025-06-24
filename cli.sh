@@ -41,9 +41,9 @@ Release options:
   --no-push      Skip pushing changes to remote [default: false]
 
 Examples:
-  ./release.sh -t minor -m "New feature release" -b develop -n release-notes.md -r -p beta
-  ./release.sh -m "Release version" -r  # Removes postfix and creates release
-  ./release.sh -t patch -m "Bug fix" -d  # Dry run a patch release
+  ./scripts/release.sh -t minor -m "New feature release" -b develop -n release-notes.md -r -p beta
+  ./scripts/release.sh -m "Release version" -r  # Removes postfix and creates release
+  ./scripts/release.sh -t patch -m "Bug fix" -d  # Dry run a patch release
 EOF
 }
 
