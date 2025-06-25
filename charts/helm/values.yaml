@@ -79,7 +79,7 @@ apiGateway:
   containerName: confixa-api
   image:
     repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
-    tag: sha-6463e4970b52a3372d84d321c826259480fb98d4
+    tag: sha-66897e647dcd6c25b8912444268f8bbe9e32b89d
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa-labs/confixa.git
