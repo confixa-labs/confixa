@@ -6,7 +6,7 @@
 apiVersion: v2
 name: Confixa
 description: A Helm chart that deploys confixa-with-microservices-and-dependencies
-version: 0.0.1
+version: 0.0.2
 appVersion: 0.0.1-rc
 home: https://confixa.com
 icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
