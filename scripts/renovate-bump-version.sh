@@ -33,9 +33,10 @@ if [[ -z "$currentVersion" ]]; then
   exit 1
 fi
 
-major=$(echo "$currentVersion" | cut -d. -f1)
-minor=$(echo "$currentVersion" | cut -d. -f2)
-patch=$(echo "$currentVersion" | cut -d. -f3)
+cleanVersion=$(echo "$currentVersion" | sed -E 's/^v?([0-9]+)\.([0-9]+)\.([0-9]+).*/\1.\2.\3/')
+major=$(echo "$cleanVersion" | cut -d. -f1)
+minor=$(echo "$cleanVersion" | cut -d. -f2)
+patch=$(echo "$cleanVersion" | cut -d. -f3)
 newVersion="${major}.${minor}.$((patch + 1))"
 sed -i.bak "s/^version:.*/version: ${newVersion}/" "$chartFile"
 echo "Updated chart version to: $newVersion"
