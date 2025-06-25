@@ -1,6 +1,6 @@
 # Confixa
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![AppVersion: 0.0.2](https://img.shields.io/badge/AppVersion-0.0.2-informational?style=flat-square)
 
 A Helm chart that deploys confixa-with-microservices-and-dependencies
 
@@ -32,7 +32,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.evenSlug.name | string | `"confixa-even-slug"` |  |
 | apiGateway.image.pullPolicy | string | `"Always"` |  |
 | apiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api"` |  |
-| apiGateway.image.tag | string | `"sha-3aec58fab44fc84eb77732c4d8539262476291bd"` |  |
+| apiGateway.image.tag | string | `"sha-66897e647dcd6c25b8912444268f8bbe9e32b89d"` |  |
 | apiGateway.issueCron.containerName | string | `"confixa-issue-cron"` |  |
 | apiGateway.issueCron.enable | bool | `true` |  |
 | apiGateway.issueCron.name | string | `"confixa-issue-cron"` |  |
@@ -81,7 +81,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | llmKumaApiGateway.enable | bool | `true` |  |
 | llmKumaApiGateway.image.pullPolicy | string | `"Always"` |  |
 | llmKumaApiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma"` |  |
-| llmKumaApiGateway.image.tag | string | `"sha-9f7d548a87919fa2f7cf6182d37094ef25b3f9a6"` |  |
+| llmKumaApiGateway.image.tag | string | `"sha-1b9f8fab28e2661a266040d699afd181caaf85bb"` |  |
 | llmKumaApiGateway.name | string | `"confixa-llm-kuma-api"` |  |
 | llmKumaApiGateway.ports.containerPort | int | `5002` |  |
 | llmKumaApiGateway.ports.protocol | string | `"TCP"` |  |
