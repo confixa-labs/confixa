@@ -204,7 +204,7 @@ git commit -m "Test pre-commit hook"
 Use this script to bump chart versions:
 
 ```bash
-./scripts/renovate-bump-version.sh confixa
+./scripts/renovate-bump-version.sh helm
 ```
 
 ### 🧪 CLI Usage

@@ -70,7 +70,7 @@ All charts follow [Semantic Versioning](https://semver.org/).
 To bump the chart version:
 
 ```bash
-./scripts/renovate-bump-version.sh confixa
+./scripts/renovate-bump-version.sh helm
 ```
 
 > Chart versions must be immutable. Any change (even docs) must increment the chart version.
