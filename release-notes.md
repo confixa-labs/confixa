@@ -1,6 +1,6 @@
 # Release Notes
 
-## v0.0.1 — Initial Release
+## v1.0.0 — Initial Release
 --- 
 We're excited to introduce the first release of Confixa — a unified platform designed to streamline delivery, operations, and collaboration for growing teams.
 

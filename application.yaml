@@ -7,7 +7,7 @@ metadata:
     managed-by: Helm
 spec:
   name: Confixa
-  version: 0.1.1
+  version: 1.0.0-rc
   icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
   description: A Helm chart that deploys confixa-with-microservices-and-dependencies.
   resources:
