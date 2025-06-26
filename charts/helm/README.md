@@ -32,7 +32,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | apiGateway.evenSlug.name | string | `"confixa-even-slug"` |  |
 | apiGateway.image.pullPolicy | string | `"Always"` |  |
 | apiGateway.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api"` |  |
-| apiGateway.image.tag | string | `"sha-502e2749530f8e184032f38b04b9d1f5020ca0b4"` |  |
+| apiGateway.image.tag | string | `"sha-c5ca07d7f476df8f9b529a455eddecd5f6a9df32"` |  |
 | apiGateway.issueCron.containerName | string | `"confixa-issue-cron"` |  |
 | apiGateway.issueCron.enable | bool | `true` |  |
 | apiGateway.issueCron.name | string | `"confixa-issue-cron"` |  |
@@ -62,7 +62,7 @@ A Helm chart that deploys confixa-with-microservices-and-dependencies
 | frontend.enable | bool | `true` |  |
 | frontend.image.pullPolicy | string | `"Always"` |  |
 | frontend.image.repository | string | `"asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend"` |  |
-| frontend.image.tag | string | `"sha-4800c38d4e14c2a28a8e9ca17c878cf1c07affab"` |  |
+| frontend.image.tag | string | `"sha-132bad6f50571548b71a716b29de356b5c2cb13a"` |  |
 | frontend.name | string | `"confixa-frontend"` |  |
 | frontend.ports.containerPort | int | `5000` |  |
 | frontend.ports.protocol | string | `"TCP"` |  |
