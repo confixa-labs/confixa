@@ -1,4 +1,4 @@
-# requirements.txt - Python dependencies for usage reporter
+# Python dependencies for Google Marketplace Usage Reporter
 
 # Google Cloud authentication
 google-auth==2.23.4
@@ -9,14 +9,5 @@ google-auth-httplib2==0.1.1
 requests==2.31.0
 urllib3==2.0.7
 
-# JSON handling (built-in, but explicit version)
-# json - built into Python
-
-# System utilities (built-in)
-# os, sys, logging, datetime, hashlib, time, pathlib - all built-in
-
-# Optional: For enhanced JSON processing
-# jsonschema==4.19.2
-
-# Optional: For better error handling and retries
+# Enhanced error handling and retries
 tenacity==8.2.3

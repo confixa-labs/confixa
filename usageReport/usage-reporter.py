@@ -35,11 +35,10 @@ class HourlyUsageReporter:
         self.service_name = os.environ.get("MARKETPLACE_SERVICE_NAME")  # Full service name
         self.metric_name = os.environ.get("METRIC_NAME", "usage_time")  # Your metric name
         
-        # Service account path - look in same directory as script
-        script_dir = Path(__file__).parent
+        # Service account path - expect from Kubernetes secret mount
         self.service_account_path = os.environ.get(
             "GOOGLE_APPLICATION_CREDENTIALS", 
-            str(script_dir / "service-account-key.json")
+            "/var/secrets/google/key.json"  # Default Kubernetes secret mount path
         )
 
         # Usage configuration

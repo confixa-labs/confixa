@@ -29,9 +29,6 @@ RUN groupadd --gid 1000 appuser && \
 # Copy the usage reporter script
 COPY usage-reporter.py .
 
-# Copy service account key (ONLY for testing - not for production!)
-COPY service-account-key.json .
-
 # Make script executable
 RUN chmod +x usage-reporter.py
 

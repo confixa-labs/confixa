@@ -1,0 +1,187 @@
+{{- if .Values.usageReporter.enable }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.usageReporter.name }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  # Marketplace configuration - matches Python script expectations
+  MARKETPLACE_PROJECT_ID: "{{ .Values.marketplace.projectId }}"
+  MARKETPLACE_SERVICE_NAME: "{{ .Values.marketplace.serviceName }}"
+  METRIC_NAME: "{{ .Values.marketplace.metricName }}"
+  PLAN_ID: "{{ .Values.marketplace.planId }}"
+  ENVIRONMENT: "{{ .Values.marketplace.environment }}"
+  REGION: "{{ .Values.marketplace.region }}"
+  
+  # Usage configuration
+  USAGE_UNIT: "cluster"
+  
+  # Logging
+  LOG_LEVEL: "INFO"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.usageReporter.name }}-credentials
+  namespace: {{ .Release.Namespace }}
+type: Opaque
+data:
+  # Sensitive marketplace credentials
+  entitlement-id: "{{ .Values.marketplace.entitlementId | b64enc }}"
+  consumer-id: "{{ .Values.marketplace.consumerId | b64enc }}"
+  
+  # Service account JSON key
+  key.json: "{{ .Values.marketplace.serviceAccountKey | b64enc }}"
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.usageReporter.name }}
+  namespace: {{ .Release.Namespace }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.usageReporter.name }}
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get"]
+  resourceNames: ["kube-system"]  # Restricted to kube-system only for cluster ID detection
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+  # Allows checking pods across all namespaces for health monitoring
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.usageReporter.name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.usageReporter.name }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.usageReporter.name }}
+  namespace: {{ .Release.Namespace }}
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.usageReporter.name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    description: "Hourly monitoring with daily usage reporting for Google Cloud Marketplace"
+    {{- with .Values.usageReporter.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  schedule: "{{ .Values.usageReporter.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.usageReporter.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.usageReporter.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ .Values.usageReporter.concurrencyPolicy }}
+  
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+        app.kubernetes.io/component: usage-reporter-job
+    spec:
+      activeDeadlineSeconds: 600  # 10 minutes max
+      backoffLimit: 2
+      
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+            app.kubernetes.io/component: usage-reporter-pod
+        spec:
+          serviceAccountName: {{ .Values.usageReporter.name }}
+          restartPolicy: {{ .Values.usageReporter.restartPolicy }}
+          
+          # Security context - matches Dockerfile user (UID 1000)
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000  # Matches Dockerfile appuser
+            runAsGroup: 1000
+            fsGroup: 1000
+          
+          containers:
+          - name: {{ .Values.usageReporter.containerName }}
+            image: "{{ .Values.usageReporter.image.repository }}:{{ .Values.usageReporter.image.tag }}"
+            imagePullPolicy: {{ .Values.usageReporter.image.pullPolicy }}
+            
+            # Security context for container
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            
+            # Environment variables from ConfigMap
+            envFrom:
+            - configMapRef:
+                name: {{ .Values.usageReporter.name }}-config
+            
+            # Sensitive environment variables from Secret
+            env:
+            - name: ENTITLEMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.usageReporter.name }}-credentials
+                  key: entitlement-id
+            - name: CONSUMER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.usageReporter.name }}-credentials
+                  key: consumer-id
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/var/secrets/google/key.json"
+            
+            # Volume mounts
+            volumeMounts:
+            - name: service-account
+              mountPath: /var/secrets/google
+              readOnly: true
+            - name: tmp-volume
+              mountPath: /tmp
+            
+            # Resource limits
+            resources:
+              {{- toYaml .Values.usageReporter.resources | nindent 14 }}
+          
+          # Volumes
+          volumes:
+          - name: service-account
+            secret:
+              secretName: {{ .Values.usageReporter.name }}-credentials
+              items:
+              - key: key.json
+                path: key.json
+          - name: tmp-volume
+            emptyDir: {}
+          
+          # Node selection and tolerations
+          {{- with .Values.usageReporter.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          
+          {{- with .Values.usageReporter.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          
+          {{- with .Values.usageReporter.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
