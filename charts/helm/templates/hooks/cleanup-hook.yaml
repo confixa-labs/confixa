@@ -45,14 +45,20 @@ spec:
             fi
           }
           
-          # Clean up ClusterRole and ClusterRoleBinding
+          # Clean up usage reporter ClusterRole and ClusterRoleBinding
           safe_delete "clusterrole" "{{ .Values.usageReporter.name }}"
           safe_delete "clusterrolebinding" "{{ .Values.usageReporter.name }}"
+          
+          # Clean up main Confixa cluster resources
+          safe_delete "clusterrole" "confixa-cluster-admin-role"
+          safe_delete "clusterrolebinding" "confixa-cluster-role-binding"
           
           # Clean up any stuck finalizers (if needed)
           echo "Checking for stuck finalizers..."
           kubectl patch clusterrole {{ .Values.usageReporter.name }} -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null || true
           kubectl patch clusterrolebinding {{ .Values.usageReporter.name }} -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null || true
+          kubectl patch clusterrole confixa-cluster-admin-role -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null || true
+          kubectl patch clusterrolebinding confixa-cluster-role-binding -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null || true
           
           echo "🎉 Cleanup completed successfully"
           exit 0
