@@ -1,0 +1,107 @@
+{{- if .Values.usageReporter.enable }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Values.usageReporter.name }}-test"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.usageReporter.name }}-test
+    app.kubernetes.io/component: test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+  - name: usage-reporter-test
+    image: "{{ .Values.usageReporter.image.repository }}:{{ .Values.usageReporter.image.tag }}"
+    imagePullPolicy: {{ .Values.usageReporter.image.pullPolicy }}
+    command:
+    - /bin/sh
+    - -c
+    - |
+      echo "Starting usage reporter tests..."
+      
+      # Test 1: Configuration validation
+      echo "Test 1: Configuration validation"
+      python3 usage-reporter.py status
+      if [ $? -eq 0 ]; then
+        echo "✅ Configuration test passed"
+      else
+        echo "❌ Configuration test failed"
+        exit 1
+      fi
+      
+      # Test 2: Payload format validation  
+      echo "Test 2: Payload format validation"
+      python3 usage-reporter.py payload > /tmp/payload.json
+      if [ $? -eq 0 ]; then
+        echo "✅ Payload generation test passed"
+        
+        # Validate JSON structure
+        if grep -q "operations" /tmp/payload.json && grep -q "operationId" /tmp/payload.json; then
+          echo "✅ Payload structure validation passed"
+        else
+          echo "❌ Payload structure validation failed"
+          exit 1
+        fi
+      else
+        echo "❌ Payload generation test failed"
+        exit 1
+      fi
+      
+      echo "🎉 All tests passed successfully!"
+      exit 0
+    
+    # Environment variables for testing
+    env:
+    - name: ENTITLEMENT_ID
+      value: "test-entitlement-12345"
+    - name: CONSUMER_ID
+      value: "test-consumer-project"
+    - name: PLAN_ID
+      value: "{{ .Values.marketplace.planId }}"
+    - name: MARKETPLACE_PROJECT_ID
+      value: "{{ .Values.marketplace.projectId }}"
+    - name: MARKETPLACE_SERVICE_NAME
+      value: "{{ .Values.marketplace.serviceName }}"
+    - name: METRIC_NAME
+      value: "{{ .Values.marketplace.metricName }}"
+    - name: ENVIRONMENT
+      value: "{{ .Values.marketplace.environment }}"
+    - name: REGION
+      value: "{{ .Values.marketplace.region }}"
+    - name: USAGE_UNIT
+      value: "cluster"
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: "/var/secrets/google/key.json"
+    
+    # Volume mounts
+    volumeMounts:
+    - name: service-account-test
+      mountPath: /var/secrets/google
+      readOnly: true
+    - name: tmp-volume
+      mountPath: /tmp
+    
+    # Resource limits for test
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+  
+  # Test volumes
+  volumes:
+  - name: service-account-test
+    secret:
+      secretName: {{ .Values.usageReporter.name }}-credentials
+      items:
+      - key: key.json
+        path: key.json
+  - name: tmp-volume
+    emptyDir: {}
+{{- end }}
