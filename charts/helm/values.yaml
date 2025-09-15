@@ -1,9 +1,9 @@
-# REQUIRED DEPENDENCIES VALUES DO NOT REMOVE
 redis:
   enable: true
   auth:
     enabled: true
     existingSecret: "redis-password-secret"
+    password: "" # Marketplace will inject redis.password
   service:
     name: "confixa-redis-master"
   master:
@@ -11,6 +11,7 @@ redis:
   replica:
     replicaCount: 1
     nodeSelector: {}
+
 rabbitmq:
   enable: true
   service:
@@ -18,6 +19,8 @@ rabbitmq:
   auth:
     username: admin
     existingPasswordSecret: "rabbitmq-password-secret"
+    password: "" # Marketplace will inject rabbitmq.password
+
 mongodb:
   enable: true
   name: "confixa-mongodb"
@@ -32,9 +35,10 @@ mongodb:
     port: 27017
   auth:
     rootUser: root
+    rootPassword: "" # Marketplace will inject mongodb.rootPassword
     rootDatabase: "confixa"
     usernames: ["confixa-admin"]
-    passwords: ["Sm2dnl23dwe7lerPDD"]
+    userPassword: "" # Marketplace will inject mongodb.userPassword
     databases: ["confixa"]
   persistence:
     enabled: true
@@ -43,12 +47,15 @@ mongodb:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
 # REQUIRED DEPENDENCIES VALUES ENDS HERE
+
 appName: confixa
 commonConfigMap: confixa-configmap
 passwordSecretsManagerName: confixa-passwords-secret
 passwordRedisSecretsManagerName: redis-password-secret
 passwordRabbitMQSecretsManagerName: rabbitmq-password-secret
+
 apiGateway:
   enable: true
   issueCron:
@@ -78,16 +85,16 @@ apiGateway:
   name: confixa-api
   containerName: confixa-api
   image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-api
-    tag: sha-c5ca07d7f476df8f9b529a455eddecd5f6a9df32
+    repository: us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/apigateway
+    tag: 1.2.0
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 200m
+      memory: 512Mi
     limits:
       cpu: 750m
       memory: 1024Mi
@@ -100,13 +107,14 @@ apiGateway:
     port: 80
     targetPort: 5001
     type: ClusterIP
+
 llmKumaApiGateway:
   enable: true
   name: confixa-llm-kuma-api
   containerName: confixa-llm-kuma-api
   image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-llm-kuma
-    tag: sha-1b9f8fab28e2661a266040d699afd181caaf85bb
+    repository: us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/llmkumaapigateway
+    tag: 1.2.0
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa-labs/confixa.git
@@ -121,24 +129,25 @@ llmKumaApiGateway:
     port: 80
     targetPort: 5002
     type: ClusterIP
+
 frontend:
   enable: true
   name: confixa-frontend
   containerName: confixa-frontend
   image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/confixa-docker-images/dev-confixa-frontend
-    tag: sha-132bad6f50571548b71a716b29de356b5c2cb13a
+    repository: us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/frontend
+    tag: 1.2.0
     pullPolicy: Always
   annotations:
     git: https://github.com/confixa-labs/confixa.git
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
+      cpu: 200m
       memory: 512Mi
+    limits:
+      cpu: 750m
+      memory: 1024Mi
   ports:
     containerPort: 5000
     protocol: TCP
@@ -148,13 +157,14 @@ frontend:
     port: 80
     targetPort: 5000
     type: ClusterIP
+
 watcher:
   enable: false
   name: confixa-watcher
   containerName: confixa-watcher
   image:
-    repository: asia-south1-docker.pkg.dev/confixa-rnd/custom-runner/configmap-updates-watcher
-    tag: sha-1d2d767afc82565a5f7278d7dd92c5a919a763ce
+    repository: us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/confixa-watcher
+    tag: disabled  # placeholder tag since it's not used
   annotations:
     git: https://github.com/confixa-labs/confixa.git
   replicas: 1
@@ -189,11 +199,56 @@ watcher:
     roleRef: confixa-watcher-role
   roleBinding:
     roleBindingRef: confixa-watcher-role-binding
+
 # SERVICE URLS
 service:
   url:
-    frontend: 'http://localhost:5000'
-    backend: 'http://localhost:5001'
-    argocd: 'http://localhost:3000'
-    kubeCost: 'http://localhost:9090'
-    clusterDashboard: 'http://localhost:9091'
+    frontend: "http://localhost:5000"
+    backend: "http://localhost:5001"
+    argocd: "http://localhost:3000"
+    kubeCost: "http://localhost:9090"
+    clusterDashboard: "http://localhost:9091"
+
+
+statusCheck:
+  enabled: false
+
+# MARKETPLACE USAGE REPORTER CONFIGURATION
+marketplace:
+  # SECURITY NOTE: These are placeholder values. Override with real values during deployment.
+  # NEVER commit real credentials to version control.
+  entitlementId: "REPLACE_WITH_REAL_ENTITLEMENT_ID"
+  consumerId: "REPLACE_WITH_REAL_CONSUMER_ID"
+  projectId: "confixa-public"
+  serviceName: "confixa.gcpmarketplace.confixa-public.cloud.goog"
+  metricName: "usage_time"
+  planId: "basic"
+  environment: "prod"
+  region: "us-central1"
+  serviceAccountKey: "REPLACE_WITH_BASE64_ENCODED_SERVICE_ACCOUNT_JSON"
+
+usageReporter:
+  enable: true
+  name: confixa-usage-reporter
+  containerName: confixa-usage-reporter
+  image:
+    repository: us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/usagereporter
+    tag: 1.2.0
+    pullPolicy: Always
+  annotations:
+    git: https://github.com/confixa-labs/confixa.git
+  schedule: "0 * * * *"  # Run every hour
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  restartPolicy: OnFailure
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 750m
+      memory: 1024Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

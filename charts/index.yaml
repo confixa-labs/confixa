@@ -2,12 +2,13 @@ apiVersion: v1
 entries:
   Confixa:
   - annotations:
-      artifacthub.io/changes: |
-        - kind: changed
-          description: Bump confixa to 1.0.0
+      category: Cloud Management
+      marketplace.cloud.google.com/deploy-info: '{"partner_id": "confixa-labs", "product_id":
+        "confixa-public", "partner_name": "Confixa Labs"}'
+      subcategory: DevOps Automation
     apiVersion: v2
-    appVersion: 1.0.0
-    created: "2025-09-05T11:56:58.656541+05:30"
+    appVersion: 1.2.0
+    created: "2025-09-09T12:11:17.489001+05:30"
     dependencies:
     - alias: redis
       condition: redis.enable
@@ -20,11 +21,12 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 14.1.4
     description: A Helm chart that deploys confixa-with-microservices-and-dependencies
-    digest: 50e04f87045971877266b4e4644bab04057fa1239c0f307aedff210d346cf963
+    digest: 3d747b349cbdf18db4ba15aa28b0dae79090074296b0f8a4970d4b0341366f78
     home: https://confixa.com
     icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
     name: Confixa
+    type: application
     urls:
-    - Confixa-1.0.0.tgz
-    version: 1.0.0
-generated: "2025-09-05T11:56:58.646159+05:30"
+    - Confixa-1.2.0.tgz
+    version: 1.2.0
+generated: "2025-09-09T12:11:17.478793+05:30"

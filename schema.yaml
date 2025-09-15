@@ -1,88 +1,210 @@
 x-google-marketplace:
   schemaVersion: v2
   applicationApiVersion: v1beta1
-  publishedVersion: "$TAG"
+  publishedVersion: "1.2.0"
   publishedVersionMetadata:
-    releaseNote: >-
-      Initial release of Confixa platform.
+    releaseNote: Initial release of Confixa platform.
     releaseTypes:
       - Feature
     recommended: false
   images:
+    usagereporter:
+      properties:
+        usageReporter.image.repository:
+          type: REPO_WITH_REGISTRY
+        usageReporter.image.tag:
+          type: TAG
+    apigateway: 
+      properties:
+        apiGateway.image.repository:
+          type: REPO_WITH_REGISTRY
+        apiGateway.image.tag:
+          type: TAG
+    llmkumaapigateway:
+      properties:
+        llmKumaApiGateway.image.repository:
+          type: REPO_WITH_REGISTRY
+        llmKumaApiGateway.image.tag:
+          type: TAG
     frontend:
       properties:
         frontend.image.repository:
           type: REPO_WITH_REGISTRY
         frontend.image.tag:
           type: TAG
-    apiGateway:
-      properties:
-        apiGateway.image.repository:
-          type: REPO_WITH_REGISTRY
-        apiGateway.image.tag:
-          type: TAG
-    argoApi:
-      properties:
-        argoApi.image.repository:
-          type: REPO_WITH_REGISTRY
-        argoApi.image.tag:
-          type: TAG
-    githubActionsApi:
-      properties:
-        githubActionsApi.image.repository:
-          type: REPO_WITH_REGISTRY
-        githubActionsApi.image.tag:
-          type: TAG
-    githubApi:
-      properties:
-        githubApi.image.repository:
-          type: REPO_WITH_REGISTRY
-        githubApi.image.tag:
-          type: TAG
-    licenceApi:
-      properties:
-        licenceApi.image.repository:
-          type: REPO_WITH_REGISTRY
-        licenceApi.image.tag:
-          type: TAG
-    llmBackend:
-      properties:
-        llmBackend.image.repository:
-          type: REPO_WITH_REGISTRY
-        llmBackend.image.tag:
-          type: TAG
-  clusterConstraints:
-    resources:
-      - replicas: 1
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 500m
-          memory: 512Mi
-    istio:
-      type: OPTIONAL
 
 properties:
   name:
     type: string
     x-google-marketplace:
       type: NAME
+    default: "confixa"
   namespace:
     type: string
     x-google-marketplace:
       type: NAMESPACE
-  
-  # Redis Configuration
-  redis.password:
+    default: "confixa"
+
+  # Common Configuration
+  commonConfigMap:
     type: string
-    x-google-marketplace:
-      type: GENERATED_PASSWORD
-      generatedPassword:
-        length: 16
-        base64: true
-  
+    title: Common ConfigMap Name
+    default: "confixa-configmap"
+
+  # API Gateway Configuration
+  apiGateway.enable:
+    type: boolean
+    title: Enable API Gateway
+    default: true
+
+  apiGateway.name:
+    type: string
+    title: API Gateway Name
+    default: "confixa-api"
+
+  apiGateway.replicas:
+    type: integer
+    title: API Gateway Replicas
+    default: 1
+
+  apiGateway.containerName:
+    type: string
+    title: API Gateway Container Name
+    default: "confixa-api"
+
+  apiGateway.image.pullPolicy:
+    type: string
+    title: API Gateway Image Pull Policy
+    default: "Always"
+
+  apiGateway.ports.containerPort:
+    type: integer
+    title: API Gateway Container Port
+    default: 5001
+
+  apiGateway.ports.protocol:
+    type: string
+    title: API Gateway Port Protocol
+    default: "TCP"
+
+  # LLM Gateway Configuration
+  llmKumaApiGateway.enable:
+    type: boolean
+    title: Enable LLM Gateway
+    default: true
+
+  llmKumaApiGateway.name:
+    type: string
+    title: LLM Gateway Name
+    default: "confixa-llm-kuma-api"
+
+  llmKumaApiGateway.replicas:
+    type: integer
+    title: LLM Gateway Replicas
+    default: 1
+
+  llmKumaApiGateway.containerName:
+    type: string
+    title: LLM Gateway Container Name
+    default: "confixa-llm-kuma-api"
+
+  llmKumaApiGateway.ports.containerPort:
+    type: integer
+    title: LLM Gateway Container Port
+    default: 5002
+
+  llmKumaApiGateway.ports.protocol:
+    type: string
+    title: LLM Gateway Port Protocol
+    default: "TCP"
+
+  llmKumaApiGateway.service.name:
+    type: string
+    title: LLM Gateway Service Name
+    default: "confixa-llm-kuma-api"
+
+  # Frontend Configuration
+  frontend.enable:
+    type: boolean
+    title: Enable Frontend
+    default: true
+
+  frontend.name:
+    type: string
+    title: Frontend Name
+    default: "confixa-frontend"
+
+  frontend.replicas:
+    type: integer
+    title: Frontend Replicas
+    default: 1
+
+  frontend.containerName:
+    type: string
+    title: Frontend Container Name
+    default: "confixa-frontend"
+
+  frontend.image.pullPolicy:
+    type: string
+    title: Frontend Image Pull Policy
+    default: "Always"
+
+  frontend.ports.containerPort:
+    type: integer
+    title: Frontend Container Port
+    default: 5000
+
+  frontend.ports.protocol:
+    type: string
+    title: Frontend Port Protocol
+    default: "TCP"
+
+  frontend.configMapRef:
+    type: string
+    title: Frontend ConfigMap Reference
+    default: "confixa-frontend"
+
   # MongoDB Configuration
+  mongodb.enable:
+    type: boolean
+    title: Enable MongoDB
+    default: true
+
+  mongodb.name:
+    type: string
+    title: MongoDB Name
+    default: "confixa-mongodb"
+
+  mongodb.containerName:
+    type: string
+    title: MongoDB Container Name
+    default: "confixa-mongodb"
+
+  mongodb.service.name:
+    type: string
+    title: MongoDB Service Name
+    default: "confixa-mongodb"
+
+  mongodb.service.port:
+    type: integer
+    title: MongoDB Service Port
+    default: 27017
+
+  mongodb.auth.rootUser:
+    type: string
+    title: MongoDB Root User
+    default: "root"
+
+  mongodb.auth.rootDatabase:
+    type: string
+    title: MongoDB Root Database
+    default: "confixa"
+
+  mongodb.persistence.size:
+    type: string
+    title: MongoDB Storage Size
+    default: "8Gi"
+
   mongodb.rootPassword:
     type: string
     x-google-marketplace:
@@ -90,6 +212,7 @@ properties:
       generatedPassword:
         length: 16
         base64: true
+
   mongodb.userPassword:
     type: string
     x-google-marketplace:
@@ -98,7 +221,36 @@ properties:
         length: 16
         base64: true
 
+  # Redis Configuration
+  redis.enable:
+    type: boolean
+    title: Enable Redis
+    default: true
+
+  redis.service.name:
+    type: string
+    title: Redis Service Name
+    default: "confixa-redis-master"
+
+  redis.password:
+    type: string
+    x-google-marketplace:
+      type: GENERATED_PASSWORD
+      generatedPassword:
+        length: 16
+        base64: true
+
   # RabbitMQ Configuration
+  rabbitmq.enable:
+    type: boolean
+    title: Enable RabbitMQ
+    default: true
+
+  rabbitmq.service.name:
+    type: string
+    title: RabbitMQ Service Name
+    default: "confixa-rabbitmq"
+
   rabbitmq.password:
     type: string
     x-google-marketplace:
@@ -106,6 +258,150 @@ properties:
       generatedPassword:
         length: 16
         base64: true
+
+  # Password Secrets Configuration
+  passwordSecretsManagerName:
+    type: string
+    title: Password Secrets Manager Name
+    default: "confixa-passwords-secret"
+
+  passwordRedisSecretsManagerName:
+    type: string
+    title: Redis Password Secret Name
+    default: "redis-password-secret"
+
+  passwordRabbitMQSecretsManagerName:
+    type: string
+    title: RabbitMQ Password Secret Name
+    default: "rabbitmq-password-secret"
+
+  # Service URLs Configuration
+  service.url.frontend:
+    type: string
+    title: Frontend Service URL
+    default: "http://localhost:5000"
+
+  service.url.backend:
+    type: string
+    title: Backend Service URL
+    default: "http://localhost:5001"
+
+  service.url.argocd:
+    type: string
+    title: ArgoCD Service URL
+    default: "http://localhost:3000"
+
+  service.url.kubeCost:
+    type: string
+    title: KubeCost Service URL
+    default: "http://localhost:9090"
+
+  service.url.clusterDashboard:
+    type: string
+    title: Cluster Dashboard Service URL
+    default: "http://localhost:9091"
+
+  # Usage Reporter Configuration
+  usageReporter.enable:
+    type: boolean
+    title: Enable Usage Reporter
+    description: Enable usage reporting for Google Cloud Marketplace
+    default: true
+
+  usageReporter.name:
+    type: string
+    title: Usage Reporter Name
+    description: Name for the usage reporter component
+    default: "confixa-usage-reporter"
+
+  usageReporter.containerName:
+    type: string
+    title: Usage Reporter Container Name
+    default: "confixa-usage-reporter"
+
+  usageReporter.image.pullPolicy:
+    type: string
+    title: Usage Reporter Image Pull Policy
+    default: "Always"
+
+  usageReporter.schedule:
+    type: string
+    title: Usage Reporter Schedule
+    description: Cron schedule for usage reporting
+    default: "0 * * * *"
+
+  usageReporter.successfulJobsHistoryLimit:
+    type: integer
+    title: Successful Jobs History Limit
+    default: 3
+
+  usageReporter.failedJobsHistoryLimit:
+    type: integer
+    title: Failed Jobs History Limit
+    default: 1
+
+  usageReporter.concurrencyPolicy:
+    type: string
+    title: Concurrency Policy
+    default: "Forbid"
+    enum:
+      - "Allow"
+      - "Forbid"
+      - "Replace"
+
+  usageReporter.restartPolicy:
+    type: string
+    title: Pod Restart Policy
+    default: "OnFailure"
+    enum:
+      - "Never"
+      - "OnFailure"
+
+  # Marketplace Configuration
+  marketplace.projectId:
+    type: string
+    title: Marketplace Project ID
+    default: "confixa-public"
+
+  marketplace.serviceName:
+    type: string
+    title: Service Name
+    default: "confixa.gcpmarketplace.confixa-public.cloud.goog"
+
+  marketplace.metricName:
+    type: string
+    title: Metric Name
+    default: "usage_time"
+
+  marketplace.planId:
+    type: string
+    title: Plan ID
+    default: "basic"
+
+  marketplace.environment:
+    type: string
+    title: Environment
+    default: "prod"
+
+  marketplace.region:
+    type: string
+    title: Region
+    default: "us-central1"
+
+  marketplace.entitlementId:
+    type: string
+    title: Entitlement ID
+    default: "REPLACE_WITH_REAL_ENTITLEMENT_ID"
+
+  marketplace.consumerId:
+    type: string
+    title: Consumer ID
+    default: "REPLACE_WITH_REAL_CONSUMER_ID"
+
+  marketplace.serviceAccountKey:
+    type: string
+    title: Service Account Key
+    default: "REPLACE_WITH_BASE64_ENCODED_SERVICE_ACCOUNT_JSON"
 
   # ArgoCD Configuration
   argocd.adminPassword:
@@ -130,8 +426,13 @@ properties:
     type: string
     title: Storage size for persistent volumes
     default: "20Gi"
-    description: Storage size for the application
     pattern: '^[1-9][0-9]*(\.[0-9]+)?[TGM]i?$'
+
+  # Reporting Secret for GCP Marketplace
+  reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
 
 required:
   - name
@@ -142,3 +443,4 @@ required:
   - mongodb.userPassword
   - rabbitmq.password
   - argocd.adminPassword
+  - reportingSecret
