@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: {{ .Values.apiGateway.name }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     {{- toYaml .Values.apiGateway.annotations | nindent 4 }}
 spec:

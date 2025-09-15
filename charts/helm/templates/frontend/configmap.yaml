@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.frontend.configMapRef }}
+  namespace: {{ .Release.Namespace }}
 data:
   REACT_APP_API_URL: '{{ .Values.service.url.backend }}/'
   REACT_APP_LICENSE_API_URL: 'https://confixa-api.wohlig.com/'

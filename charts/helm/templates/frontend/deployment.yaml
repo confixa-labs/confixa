@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: {{ .Values.frontend.name }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     {{- toYaml .Values.frontend.annotations | nindent 4 }}
 spec:

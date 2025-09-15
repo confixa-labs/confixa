@@ -94,8 +94,8 @@ spec:
         app.kubernetes.io/name: {{ .Values.usageReporter.name }}
         app.kubernetes.io/component: usage-reporter-job
     spec:
-      activeDeadlineSeconds: 600  # 10 minutes max
-      backoffLimit: 2
+      activeDeadlineSeconds: 1800  # 30 minutes max
+      backoffLimit: 6
       
       template:
         metadata:

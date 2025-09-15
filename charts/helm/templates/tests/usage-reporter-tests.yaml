@@ -27,9 +27,9 @@ spec:
       echo "Test 1: Configuration validation"
       python3 usage-reporter.py status
       if [ $? -eq 0 ]; then
-        echo "✅ Configuration test passed"
+        echo "Configuration test passed"
       else
-        echo "❌ Configuration test failed"
+        echo "Configuration test failed"
         exit 1
       fi
       
@@ -37,21 +37,21 @@ spec:
       echo "Test 2: Payload format validation"
       python3 usage-reporter.py payload > /tmp/payload.json
       if [ $? -eq 0 ]; then
-        echo "✅ Payload generation test passed"
+        echo "Payload generation test passed"
         
         # Validate JSON structure
         if grep -q "operations" /tmp/payload.json && grep -q "operationId" /tmp/payload.json; then
-          echo "✅ Payload structure validation passed"
+          echo "Payload structure validation passed"
         else
-          echo "❌ Payload structure validation failed"
+          echo "Payload structure validation failed"
           exit 1
         fi
       else
-        echo "❌ Payload generation test failed"
+        echo "Payload generation test failed"
         exit 1
       fi
       
-      echo "🎉 All tests passed successfully!"
+      echo "All tests passed successfully!"
       exit 0
     
     # Environment variables for testing
@@ -88,11 +88,11 @@ spec:
     # Resource limits for test
     resources:
       requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
         cpu: 100m
         memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 512Mi
   
   # Test volumes
   volumes:

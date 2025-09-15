@@ -3,6 +3,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ .Values.apiGateway.bitbucketOauthToken.name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   schedule: "*/40 * * * *"
   jobTemplate:
