@@ -1,18 +1,77 @@
-apiVersion: v1
+apiVersion: app.k8s.io/v1beta1
 kind: Application
 metadata:
-  name: confixa
+  name: { { .Release.Name } }
+  labels:
+    app.kubernetes.io/name: confixa
+    app.kubernetes.io/version: { { .Chart.AppVersion } }
+    app.kubernetes.io/component: application
+    app.kubernetes.io/managed-by: Helm
   annotations:
-    category: Cloud Management
-    managed-by: Helm
+    marketplace.cloud.google.com/deploy-info: '{"partner_id": "confixa-labs", "product_id": "confixa-public", "partner_name": "Confixa Labs"}'
 spec:
-  name: Confixa
-  version: 1.0.0
-  icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg
-  description: A Helm chart that deploys confixa-with-microservices-and-dependencies.
-  resources:
-    cpu: 2
-    memory: 4Gi
-  deployment:
-    helm:
-      chartPath: confixa
+  type: confixa
+  descriptor:
+    type: Confixa
+    version: { { .Chart.AppVersion } }
+    description: |-
+      Confixa is a comprehensive cloud management platform that provides:
+
+      ## Key Features:
+      - **Microservices Architecture**: Scalable and maintainable service architecture
+      - **DevOps Automation**: Integrated CI/CD pipeline management
+      - **Infrastructure Monitoring**: Real-time resource and performance monitoring
+      - **Cost Optimization**: Built-in cost tracking and optimization recommendations
+      - **Multi-Cloud Support**: Deploy and manage across different cloud providers
+      - **Security Management**: Integrated security scanning and compliance checks
+
+      ## Components:
+      - **Frontend Dashboard**: React-based web interface for management
+      - **API Gateway**: Central API management and routing
+      - **LLM Integration**: AI-powered insights and recommendations
+      - **Configuration Management**: Automated configuration updates
+      - **Message Queue**: RabbitMQ for asynchronous processing
+      - **Database**: MongoDB for persistent data storage
+      - **Caching**: Redis for high-performance caching
+
+      ## Post-Installation:
+      After installation, access the Confixa dashboard through the frontend service.
+      Default credentials and configuration will be provided via Kubernetes secrets.
+    maintainers:
+      - name: Confixa Labs
+        email: confixa7@gmail.com
+    links:
+      - description: Confixa Documentation
+        url: https://docs.confixa.com
+      - description: Confixa Website
+        url: https://confixa.com
+    icons:
+      - src: "https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2491c2a0c5a_Layer_1.svg"
+        type: "image/svg+xml"
+    keywords:
+      - "Cloud Management"
+  componentKinds:
+    - group: v1
+      kind: ConfigMap
+    - group: v1
+      kind: Secret
+    - group: v1
+      kind: Service
+    - group: v1
+      kind: ServiceAccount
+    - group: v1
+      kind: PersistentVolumeClaim
+    - group: apps/v1
+      kind: Deployment
+    - group: apps/v1
+      kind: StatefulSet
+    - group: batch/v1
+      kind: CronJob
+    - group: rbac.authorization.k8s.io/v1
+      kind: Role
+    - group: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
+    - group: rbac.authorization.k8s.io/v1
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
