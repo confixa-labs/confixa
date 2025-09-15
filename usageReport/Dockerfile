@@ -1,9 +1,22 @@
 # Dockerfile for Google Marketplace Usage Reporter
 FROM python:3.11-slim
 
-# Add Google Cloud Marketplace required annotation
-# LABEL com.googleapis.cloudmarketplace.product.service.name=services/confixa-new.endpoints.confixa-public.cloud.goog
-# LABEL com.googleapis.cloudmarketplace.product.version=1.2.0
+# # Build arguments from metadata.json
+# ARG VERSION=1.2.0
+# ARG NAME="confixa-usagereporter"
+# ARG DESCRIPTION="Usage reporter for Confixa Google Cloud Marketplace integration"
+# ARG MAINTAINER="support@confixa.com"
+# ARG SERVICE_NAME="services/confixa.endpoints.confixa-public.cloud.goog"
+
+# # Google Cloud Marketplace required labels
+# LABEL com.googleapis.cloudmarketplace.product.service.name="${SERVICE_NAME}"
+# LABEL com.googleapis.cloudmarketplace.product.version="${VERSION}"
+
+# # Additional metadata labels
+# LABEL name="${NAME}"
+# LABEL version="${VERSION}"
+# LABEL description="${DESCRIPTION}"
+# LABEL maintainer="${MAINTAINER}"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -32,6 +45,9 @@ RUN groupadd --gid 1000 appuser && \
 
 # Copy the usage reporter script
 COPY usage-reporter.py .
+
+# Copy metadata for runtime access
+COPY metadata.json /tmp/metadata.json
 
 # Make script executable
 RUN chmod +x usage-reporter.py

@@ -95,5 +95,5 @@ ENV WAIT_FOR_READY_TIMEOUT=1800
 ENV TESTER_TIMEOUT=1800
 
 # Add required labels
-LABEL com.googleapis.cloudmarketplace.product.service.name="services/confixa.endpoints.confixa-public.cloud.goog"
+LABEL com.googleapis.cloudmarketplace.product.service.name="services/confixa-new.endpoints.confixa-public.cloud.goog"
 LABEL com.googleapis.cloudmarketplace.product.version="1.2.0"

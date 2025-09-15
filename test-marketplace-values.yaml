@@ -1,0 +1,57 @@
+name: "test-confixa"
+namespace: "test-confixa"
+
+# Required marketplace secrets (base64 encoded test values)
+mongodb:
+  rootPassword: "dGVzdHJvb3QxMjM="  # testroot123
+  userPassword: "dGVzdHVzZXIxMjM="  # testuser123
+
+redis:
+  password: "dGVzdHJlZGlzMTIz"  # testredis123
+
+rabbitmq:
+  password: "dGVzdHJhYmJpdDE="  # testrabbit1
+
+argocd:
+  adminPassword: "dGVzdGFyZ28xMjM="  # testargo123
+
+# Marketplace reporting secret (required)
+reportingSecret: "eyJ0ZXN0IjoidGVzdCJ9"  # {"test":"test"}
+
+# Storage configuration
+persistence:
+  size: "10Gi"
+  storageClass: "local-path"  # Use "standard" for GKE, "local-path" for kind
+
+# Test marketplace values
+marketplace:
+  entitlementId: "test-entitlement-id"
+  consumerId: "test-consumer-id"
+  projectId: "confixa-public"
+  serviceName: "confixa-new.endpoints.confixa-public.cloud.goog"
+  metricName: "usage_time"
+  planId: "basic"
+  environment: "test"
+  region: "us-central1"
+  serviceAccountKey: "eyJ0ZXN0Ijoic2VydmljZWFjY291bnQifQ=="
+
+# Image overrides
+apiGateway:
+  image:
+    repository: "us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/apigateway"
+    tag: "1.2.0"
+
+llmKumaApiGateway:
+  image:
+    repository: "us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/llmkumaapigateway"
+    tag: "1.2.0"
+
+frontend:
+  image:
+    repository: "us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/frontend"
+    tag: "1.2.0"
+
+usageReporter:
+  image:
+    repository: "us-docker.pkg.dev/confixa-public/confixa-helm-repo-oci/usagereporter"
+    tag: "1.2.0"

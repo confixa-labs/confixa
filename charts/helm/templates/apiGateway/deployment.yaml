@@ -66,4 +66,6 @@ spec:
               cpu: {{ .Values.apiGateway.resources.limits.cpu }}
           readinessProbe:
             {{- include "apiGateway.readinessProbe" . | nindent 12 }}
+          livenessProbe:
+            {{- include "apiGateway.livenessProbe" . | nindent 12 }}
 {{- end }}

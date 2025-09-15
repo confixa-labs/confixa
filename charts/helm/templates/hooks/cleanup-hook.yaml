@@ -39,9 +39,9 @@ spec:
               
               # Wait for deletion to complete
               kubectl wait --for=delete $RESOURCE_TYPE/$RESOURCE_NAME --timeout=60s 2>/dev/null || true
-              echo "✅ $RESOURCE_TYPE $RESOURCE_NAME deleted"
+              echo "$RESOURCE_TYPE $RESOURCE_NAME deleted"
             else
-              echo "ℹ️  $RESOURCE_TYPE $RESOURCE_NAME does not exist, skipping"
+              echo "$RESOURCE_TYPE $RESOURCE_NAME does not exist, skipping"
             fi
           }
           
@@ -60,7 +60,7 @@ spec:
           kubectl patch clusterrole confixa-cluster-admin-role -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null || true
           kubectl patch clusterrolebinding confixa-cluster-role-binding -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null || true
           
-          echo "🎉 Cleanup completed successfully"
+          echo "Cleanup completed successfully"
           exit 0
         
         resources:

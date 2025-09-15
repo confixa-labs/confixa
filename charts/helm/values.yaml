@@ -220,7 +220,7 @@ marketplace:
   entitlementId: "REPLACE_WITH_REAL_ENTITLEMENT_ID"
   consumerId: "REPLACE_WITH_REAL_CONSUMER_ID"
   projectId: "confixa-public"
-  serviceName: "confixa.gcpmarketplace.confixa-public.cloud.goog"
+  serviceName: "confixa-new.endpoints.confixa-public.cloud.goog"
   metricName: "usage_time"
   planId: "basic"
   environment: "prod"

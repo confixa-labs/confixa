@@ -366,7 +366,7 @@ properties:
   marketplace.serviceName:
     type: string
     title: Service Name
-    default: "confixa.gcpmarketplace.confixa-public.cloud.goog"
+    default: "confixa-new.endpoints.confixa-public.cloud.goog"
 
   marketplace.metricName:
     type: string

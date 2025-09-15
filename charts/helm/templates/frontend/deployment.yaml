@@ -35,4 +35,6 @@ spec:
               cpu: {{ .Values.frontend.resources.limits.cpu }}
           readinessProbe:
             {{- include "frontend.readinessProbe" . | nindent 12 }}
+          livenessProbe:
+            {{- include "frontend.livenessProbe" . | nindent 12 }}
 {{- end }}
