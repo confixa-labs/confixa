@@ -1,6 +1,10 @@
 # Dockerfile for Google Marketplace Usage Reporter
 FROM python:3.11-slim
 
+# Add Google Cloud Marketplace required annotation
+# LABEL com.googleapis.cloudmarketplace.product.service.name=services/confixa-new.endpoints.confixa-public.cloud.goog
+# LABEL com.googleapis.cloudmarketplace.product.version=1.2.0
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
