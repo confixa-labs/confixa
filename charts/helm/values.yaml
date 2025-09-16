@@ -14,12 +14,48 @@ redis:
 
 rabbitmq:
   enable: true
-  service:
-    name: "confixa-rabbitmq"
+  
+  ## Basic configuration
   auth:
     username: admin
     existingPasswordSecret: "rabbitmq-password-secret"
-    password: "" # Marketplace will inject rabbitmq.password
+    secretPasswordKey: "rabbitmq-password"
+    # Don't set password here - it conflicts with existingPasswordSecret
+
+  ## Service configuration  
+  service:
+    name: "confixa-rabbitmq"
+    type: ClusterIP
+    port: 5672
+
+  ## Resource limits - optimized for your cluster
+  resources:
+    limits:
+      cpu: 300m
+      memory: 320Mi
+      ephemeral-storage: 1Gi
+    requests:
+      cpu: 150m
+      memory: 200Mi
+      ephemeral-storage: 50Mi
+
+  ## Persistence
+  persistence:
+    enabled: true
+    size: 4Gi
+
+  ## Clustering - disabled for single node
+  clustering:
+    enabled: false
+
+  ## DO NOT use extraEnvVars for auth - it conflicts with auth section
+  # extraEnvVars: []  # Keep empty or remove
+
+  ## Configuration additions
+  extraConfiguration: |-
+    cluster_name = test-confixa-rabbitmq
+    loopback_users.admin = false
+    prometheus.tcp.port = 9419
 
 mongodb:
   enable: true

@@ -1,10 +1,10 @@
 apiVersion: app.k8s.io/v1beta1
 kind: Application
 metadata:
-  name: { { .Release.Name } }
+  name: {{ .Release.Name }}
   labels:
     app.kubernetes.io/name: confixa
-    app.kubernetes.io/version: { { .Chart.AppVersion } }
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/component: application
     app.kubernetes.io/managed-by: Helm
   annotations:
@@ -13,7 +13,7 @@ spec:
   type: confixa
   descriptor:
     type: Confixa
-    version: { { .Chart.AppVersion } }
+    version: {{ .Chart.AppVersion }}
     description: |-
       Confixa is a comprehensive cloud management platform that provides:
 
