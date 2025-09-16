@@ -63,10 +63,4 @@ spec:
                   key: llmKumaHost
           resources:
             {{- toYaml .Values.apiGateway.issueCron.resources | nindent 12 }}
-          # Note: Cron services may not need readiness/liveness probes
-          # Remove these if this container doesn't serve HTTP traffic
-          # readinessProbe:
-          #   {{- include "apiGateway.readinessProbe" . | nindent 12 }}
-          # livenessProbe:
-          #   {{- include "apiGateway.livenessProbe" . | nindent 12 }}
 {{- end }}
