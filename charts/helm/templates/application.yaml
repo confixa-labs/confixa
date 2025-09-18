@@ -2,6 +2,7 @@ apiVersion: app.k8s.io/v1beta1
 kind: Application
 metadata:
   name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: confixa
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
@@ -10,9 +11,8 @@ metadata:
   annotations:
     marketplace.cloud.google.com/deploy-info: '{"partner_id": "confixa-labs", "product_id": "confixa-public", "partner_name": "Confixa Labs"}'
 spec:
-  type: confixa
   descriptor:
-    type: Confixa
+    type: confixa
     version: {{ .Chart.AppVersion }}
     description: |-
       Confixa is a comprehensive cloud management platform that provides:
@@ -61,6 +61,8 @@ spec:
       kind: ServiceAccount
     - group: v1
       kind: PersistentVolumeClaim
+    - group: v1
+      kind: Pod
     - group: apps/v1
       kind: Deployment
     - group: apps/v1
