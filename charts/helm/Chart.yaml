@@ -13,7 +13,7 @@ icon: https://cdn.prod.website-files.com/66aa0bf79ded54ce70cd7daf/66aa27e3568aa2
 dependencies:
   - alias: redis
     name: redis
-    version: "20.2.0"
+    version: "22.0.7"  # Latest version
     repository: "https://charts.bitnami.com/bitnami"
     condition: redis.enable
   - alias: rabbitmq
