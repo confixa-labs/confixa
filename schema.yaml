@@ -7,6 +7,58 @@ x-google-marketplace:
     releaseTypes:
       - Feature
     recommended: false
+  deployerServiceAccount:
+    description: "Service account for Confixa deployer with comprehensive Kubernetes permissions"
+    roles:
+    - type: ClusterRole
+      rulesType: CUSTOM
+      rules:
+      - apiGroups: [""]
+        resources: ["persistentvolumes", "persistentvolumeclaims"]
+        verbs: ["*"]
+      - apiGroups: ["extensions"]
+        resources: ["*"]
+        verbs: ["*"]
+      # Core API resources
+      - apiGroups: [""]
+        resources: ["*"]
+        verbs: ["*"]
+      # Apps API  
+      - apiGroups: ["apps"]
+        resources: ["*"]
+        verbs: ["*"]
+      # Batch API (Jobs, CronJobs)
+      - apiGroups: ["batch"]
+        resources: ["*"]
+        verbs: ["*"]
+      # RBAC (Critical for ClusterRole/ClusterRoleBinding creation)
+      - apiGroups: ["rbac.authorization.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
+      # Network policies
+      - apiGroups: ["networking.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
+      # Pod disruption budgets  
+      - apiGroups: ["policy"]
+        resources: ["*"]
+        verbs: ["*"]
+      # Application CRD management
+      - apiGroups: ["app.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
+      # CRD management
+      - apiGroups: ["apiextensions.k8s.io"]
+        resources: ["customresourcedefinitions"]
+        verbs: ["*"]
+      # Storage
+      - apiGroups: ["storage.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
+      # Additional permissions
+      - apiGroups: ["autoscaling", "coordination.k8s.io", "metrics.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
   images:
     usagereporter:
       properties:
@@ -232,6 +284,16 @@ properties:
     title: Redis Service Name
     default: "confixa-redis-master"
 
+  redis.auth.enabled:
+    type: boolean
+    title: Enable Redis Authentication
+    default: true
+    
+  redis.auth.existingSecret:
+    type: string
+    title: Redis Existing Secret Name
+    default: "redis-password-secret"
+
   redis.password:
     type: string
     x-google-marketplace:
@@ -250,6 +312,16 @@ properties:
     type: string
     title: RabbitMQ Service Name
     default: "confixa-rabbitmq"
+
+  rabbitmq.auth.username:
+    type: string
+    title: RabbitMQ Username
+    default: "admin"
+    
+  rabbitmq.auth.existingPasswordSecret:
+    type: string
+    title: RabbitMQ Existing Password Secret
+    default: "rabbitmq-password-secret"
 
   rabbitmq.password:
     type: string
