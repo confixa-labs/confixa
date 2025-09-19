@@ -1,0 +1,44 @@
+{{- if .Values.redis.enable }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.redis.service.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.redis.service.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.redis.service.name }}
+    spec:
+      containers:
+      - name: redis
+        image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+        {{- if .Values.redis.auth.enabled }}
+        command: ["sh", "-c"]
+        args: ["redis-server --requirepass $REDIS_PASSWORD"]
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.auth.existingSecret }}
+              key: redis-password
+        {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redis.service.name }}
+spec:
+  selector:
+    app: {{ .Values.redis.service.name }}
+  ports:
+  - port: 6379
+    targetPort: 6379
+{{- end }}

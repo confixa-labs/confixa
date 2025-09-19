@@ -84,6 +84,18 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         frontend.image.tag:
           type: TAG
+    redis:
+      properties:
+        redis.image.repository:
+          type: REPO_WITH_REGISTRY
+        redis.image.tag:
+          type: TAG
+    rabbitmq:
+      properties:
+        rabbitmq.image.repository:
+          type: REPO_WITH_REGISTRY  
+        rabbitmq.image.tag:
+          type: TAG
 
 properties:
   name:
@@ -272,6 +284,19 @@ properties:
       generatedPassword:
         length: 16
         base64: true
+  
+  # redis.image.repository:
+  #   type: string
+  #   default: gcr.io/confixa-public/redis
+  # redis.image.tag:
+  #   type: string
+  #   default: "7.2.0"
+  # rabbitmq.image.repository:
+  #   type: string
+  #   default: gcr.io/confixa-public/rabbitmq
+  # rabbitmq.image.tag:
+  #   type: string
+  #   default: "3.12.0"
 
   # Redis Configuration
   redis.enable:
