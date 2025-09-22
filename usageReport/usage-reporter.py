@@ -153,7 +153,7 @@ class HourlyUsageReporter:
                     "get",
                     "pods",
                     "-l",
-                    "app=confixa",  # Your app label
+                    "app=confixa-api",  # Your app label
                     "--all-namespaces",
                     "--field-selector=status.phase=Running",
                     "-o",
