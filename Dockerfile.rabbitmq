@@ -1,0 +1,7 @@
+FROM rabbitmq:4.1.4-management
+
+# Update all packages to fix vulnerabilities  
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*

@@ -1,0 +1,50 @@
+{{- if .Values.rabbitmq.enable }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: confixa-rabbitmq
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: confixa-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: confixa-rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: "{{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: {{ .Values.rabbitmq.auth.username }}
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.rabbitmq.auth.existingPasswordSecret }}
+              key: rabbitmq-password
+        - name: RABBITMQ_PLUGINS
+          value: "rabbitmq_management"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.rabbitmq.service.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: confixa-rabbitmq
+  ports:
+  - port: 5672
+    targetPort: 5672
+    name: amqp          # ADD THIS LINE
+  - port: 15672
+    targetPort: 15672
+    name: management    # ADD THIS LINE
+{{- end }}

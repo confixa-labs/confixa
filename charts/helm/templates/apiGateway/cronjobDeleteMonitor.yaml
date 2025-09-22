@@ -6,8 +6,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   schedule: "30 */3 * * *"
+  concurrencyPolicy: Forbid  # Prevent overlapping jobs
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
+      backoffLimit: 6  # Limit retry attempts
+      activeDeadlineSeconds: 300  # 5 minute timeout
       template:
         spec:
           containers:
@@ -51,5 +56,12 @@ spec:
                       name: {{ .Values.passwordSecretsManagerName }}
                       key: llmKumaHost
               imagePullPolicy: Always
+              resources:
+                requests:
+                  memory: {{ .Values.apiGateway.resources.requests.memory }}
+                  cpu: {{ .Values.apiGateway.resources.requests.cpu }}
+                limits:
+                  memory: {{ .Values.apiGateway.resources.limits.memory }}
+                  cpu: {{ .Values.apiGateway.resources.limits.cpu }}
           restartPolicy: OnFailure
 {{- end }}
