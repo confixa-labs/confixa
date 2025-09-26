@@ -1,7 +1,7 @@
 x-google-marketplace:
   schemaVersion: v2
   applicationApiVersion: v1beta1
-  publishedVersion: "1.2.0"
+  publishedVersion: "1.2.1"
   publishedVersionMetadata:
     releaseNote: Initial release of Confixa platform.
     releaseTypes:
@@ -10,55 +10,55 @@ x-google-marketplace:
   deployerServiceAccount:
     description: "Service account for Confixa deployer with comprehensive Kubernetes permissions"
     roles:
-    - type: ClusterRole
-      rulesType: CUSTOM
-      rules:
-      - apiGroups: [""]
-        resources: ["persistentvolumes", "persistentvolumeclaims"]
-        verbs: ["*"]
-      - apiGroups: ["extensions"]
-        resources: ["*"]
-        verbs: ["*"]
-      # Core API resources
-      - apiGroups: [""]
-        resources: ["*"]
-        verbs: ["*"]
-      # Apps API  
-      - apiGroups: ["apps"]
-        resources: ["*"]
-        verbs: ["*"]
-      # Batch API (Jobs, CronJobs)
-      - apiGroups: ["batch"]
-        resources: ["*"]
-        verbs: ["*"]
-      # RBAC (Critical for ClusterRole/ClusterRoleBinding creation)
-      - apiGroups: ["rbac.authorization.k8s.io"]
-        resources: ["*"]
-        verbs: ["*"]
-      # Network policies
-      - apiGroups: ["networking.k8s.io"]
-        resources: ["*"]
-        verbs: ["*"]
-      # Pod disruption budgets  
-      - apiGroups: ["policy"]
-        resources: ["*"]
-        verbs: ["*"]
-      # Application CRD management
-      - apiGroups: ["app.k8s.io"]
-        resources: ["*"]
-        verbs: ["*"]
-      # CRD management
-      - apiGroups: ["apiextensions.k8s.io"]
-        resources: ["customresourcedefinitions"]
-        verbs: ["*"]
-      # Storage
-      - apiGroups: ["storage.k8s.io"]
-        resources: ["*"]
-        verbs: ["*"]
-      # Additional permissions
-      - apiGroups: ["autoscaling", "coordination.k8s.io", "metrics.k8s.io"]
-        resources: ["*"]
-        verbs: ["*"]
+      - type: ClusterRole
+        rulesType: CUSTOM
+        rules:
+          - apiGroups: [""]
+            resources: ["persistentvolumes", "persistentvolumeclaims"]
+            verbs: ["*"]
+          - apiGroups: ["extensions"]
+            resources: ["*"]
+            verbs: ["*"]
+          # Core API resources
+          - apiGroups: [""]
+            resources: ["*"]
+            verbs: ["*"]
+          # Apps API
+          - apiGroups: ["apps"]
+            resources: ["*"]
+            verbs: ["*"]
+          # Batch API (Jobs, CronJobs)
+          - apiGroups: ["batch"]
+            resources: ["*"]
+            verbs: ["*"]
+          # RBAC (Critical for ClusterRole/ClusterRoleBinding creation)
+          - apiGroups: ["rbac.authorization.k8s.io"]
+            resources: ["*"]
+            verbs: ["*"]
+          # Network policies
+          - apiGroups: ["networking.k8s.io"]
+            resources: ["*"]
+            verbs: ["*"]
+          # Pod disruption budgets
+          - apiGroups: ["policy"]
+            resources: ["*"]
+            verbs: ["*"]
+          # Application CRD management
+          - apiGroups: ["app.k8s.io"]
+            resources: ["*"]
+            verbs: ["*"]
+          # CRD management
+          - apiGroups: ["apiextensions.k8s.io"]
+            resources: ["customresourcedefinitions"]
+            verbs: ["*"]
+          # Storage
+          - apiGroups: ["storage.k8s.io"]
+            resources: ["*"]
+            verbs: ["*"]
+          # Additional permissions
+          - apiGroups: ["autoscaling", "coordination.k8s.io", "metrics.k8s.io"]
+            resources: ["*"]
+            verbs: ["*"]
   images:
     usagereporter:
       properties:
@@ -66,7 +66,7 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         usageReporter.image.tag:
           type: TAG
-    apigateway: 
+    apigateway:
       properties:
         apiGateway.image.repository:
           type: REPO_WITH_REGISTRY
@@ -93,7 +93,7 @@ x-google-marketplace:
     rabbitmq:
       properties:
         rabbitmq.image.repository:
-          type: REPO_WITH_REGISTRY  
+          type: REPO_WITH_REGISTRY
         rabbitmq.image.tag:
           type: TAG
 
@@ -108,6 +108,12 @@ properties:
     x-google-marketplace:
       type: NAMESPACE
     default: "confixa"
+
+  # MARKETPLACE REPORTING SECRET - CRITICAL FOR USAGE REPORTING
+  reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
 
   # Common Configuration
   commonConfigMap:
@@ -284,19 +290,6 @@ properties:
       generatedPassword:
         length: 16
         base64: true
-  
-  # redis.image.repository:
-  #   type: string
-  #   default: gcr.io/confixa-public/redis
-  # redis.image.tag:
-  #   type: string
-  #   default: "7.2.0"
-  # rabbitmq.image.repository:
-  #   type: string
-  #   default: gcr.io/confixa-public/rabbitmq
-  # rabbitmq.image.tag:
-  #   type: string
-  #   default: "3.12.0"
 
   # Redis Configuration
   redis.enable:
@@ -313,7 +306,7 @@ properties:
     type: boolean
     title: Enable Redis Authentication
     default: true
-    
+
   redis.auth.existingSecret:
     type: string
     title: Redis Existing Secret Name
@@ -342,7 +335,7 @@ properties:
     type: string
     title: RabbitMQ Username
     default: "admin"
-    
+
   rabbitmq.auth.existingPasswordSecret:
     type: string
     title: RabbitMQ Existing Password Secret
@@ -454,7 +447,33 @@ properties:
       - "Never"
       - "OnFailure"
 
-  # Marketplace Configuration
+  # FIXED: Added missing resource limits definitions
+  usageReporter.resources.requests.memory:
+    type: string
+    title: Usage Reporter Memory Request
+    description: Memory request for usage reporter container
+    default: "128Mi"
+
+  usageReporter.resources.requests.cpu:
+    type: string
+    title: Usage Reporter CPU Request
+    description: CPU request for usage reporter container
+    default: "100m"
+
+  usageReporter.resources.limits.memory:
+    type: string
+    title: Usage Reporter Memory Limit
+    description: Memory limit for usage reporter container
+    default: "256Mi"
+
+  usageReporter.resources.limits.cpu:
+    type: string
+    title: Usage Reporter CPU Limit
+    description: CPU limit for usage reporter container
+    default: "200m"
+
+  # Marketplace Configuration - REMOVED INDIVIDUAL CREDENTIALS
+  # These will come from the reportingSecret automatically
   marketplace.projectId:
     type: string
     title: Marketplace Project ID
@@ -485,21 +504,6 @@ properties:
     title: Region
     default: "us-central1"
 
-  marketplace.entitlementId:
-    type: string
-    title: Entitlement ID
-    default: "REPLACE_WITH_REAL_ENTITLEMENT_ID"
-
-  marketplace.consumerId:
-    type: string
-    title: Consumer ID
-    default: "REPLACE_WITH_REAL_CONSUMER_ID"
-
-  marketplace.serviceAccountKey:
-    type: string
-    title: Service Account Key
-    default: "REPLACE_WITH_BASE64_ENCODED_SERVICE_ACCOUNT_JSON"
-
   # ArgoCD Configuration
   argocd.adminPassword:
     type: string
@@ -524,12 +528,6 @@ properties:
     title: Storage size for persistent volumes
     default: "20Gi"
     pattern: '^[1-9][0-9]*(\.[0-9]+)?[TGM]i?$'
-
-  # Reporting Secret for GCP Marketplace
-  reportingSecret:
-    type: string
-    x-google-marketplace:
-      type: REPORTING_SECRET
 
 required:
   - name

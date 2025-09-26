@@ -16,23 +16,15 @@ data:
   # Usage configuration
   USAGE_UNIT: "cluster"
   
+  # REPORTING SECRET NAME - From marketplace
+  REPORTING_SECRET: "{{ .Values.reportingSecret }}"
+  
   # Logging
   LOG_LEVEL: "INFO"
 
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ .Values.usageReporter.name }}-credentials
-  namespace: {{ .Release.Namespace }}
-type: Opaque
-data:
-  # Sensitive marketplace credentials
-  entitlement-id: "{{ .Values.marketplace.entitlementId | b64enc }}"
-  consumer-id: "{{ .Values.marketplace.consumerId | b64enc }}"
-  
-  # Service account JSON key
-  key.json: "{{ .Values.marketplace.serviceAccountKey | b64enc }}"
+# NO LONGER CREATE CREDENTIALS SECRET - MARKETPLACE PROVIDES IT
+# The secret is automatically created by Google Cloud Marketplace with name from .Values.reportingSecret
 
 ---
 apiVersion: v1
@@ -130,41 +122,33 @@ spec:
             - configMapRef:
                 name: {{ .Values.usageReporter.name }}-config
             
-            # Sensitive environment variables from Secret
+            # MARKETPLACE CREDENTIALS - From reporting secret
             env:
-            - name: ENTITLEMENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.usageReporter.name }}-credentials
-                  key: entitlement-id
-            - name: CONSUMER_ID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.usageReporter.name }}-credentials
-                  key: consumer-id
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/var/secrets/google/key.json"
+            - name: REPORTING_SECRET_NAME
+              value: "{{ .Values.reportingSecret }}"
             
-            # Volume mounts
+            # Volume mounts - MARKETPLACE SECRET MOUNT
             volumeMounts:
-            - name: service-account
-              mountPath: /var/secrets/google
+            - name: marketplace-reporting-secret
+              mountPath: /var/secrets/marketplace
               readOnly: true
             - name: tmp-volume
               mountPath: /tmp
             
-            # Resource limits - FIXED: Uncommented and properly formatted
+            # Resource limits - FIXED: Now properly structured with nested values
             resources:
-              {{- toYaml .Values.usageReporter.resources | nindent 14 }}
+              requests:
+                memory: "{{ .Values.usageReporter.resources.requests.memory }}"
+                cpu: "{{ .Values.usageReporter.resources.requests.cpu }}"
+              limits:
+                memory: "{{ .Values.usageReporter.resources.limits.memory }}"
+                cpu: "{{ .Values.usageReporter.resources.limits.cpu }}"
           
-          # Volumes
+          # Volumes - MARKETPLACE SECRET
           volumes:
-          - name: service-account
+          - name: marketplace-reporting-secret
             secret:
-              secretName: {{ .Values.usageReporter.name }}-credentials
-              items:
-              - key: key.json
-                path: key.json
+              secretName: "{{ .Values.reportingSecret }}"
           - name: tmp-volume
             emptyDir: {}
           
