@@ -53,10 +53,55 @@ if [ -z "${NAME_TEST}" ] || [ -z "${NAMESPACE_TEST}" ]; then
     exit 1
 fi
 
+# Export for use in subsequent scripts
+export NAME="${NAME_TEST}"
+export NAMESPACE="${NAMESPACE_TEST}"
+
 # Step 4: Pre-deployment cluster connectivity test
 echo "=== Cluster Connectivity Test ==="
 kubectl cluster-info 2>&1 || echo "Cluster info failed"
 kubectl auth can-i create applications.app.k8s.io 2>&1 || echo "RBAC check failed"
+
+# Step 5: CRITICAL FIX - Pre-create Application resource
+echo "=== Pre-creating Application Resource ==="
+cat <<EOF | kubectl apply -f -
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: ${NAME}
+  namespace: ${NAMESPACE}
+  labels:
+    app.kubernetes.io/name: confixa
+  annotations:
+    marketplace.cloud.google.com/deploy-info: '{"partner_id": "confixa-labs", "product_id": "confixa-public", "partner_name": "Confixa Labs"}'
+spec:
+  descriptor:
+    type: confixa
+    version: "1.2.2"
+    description: "Confixa Cloud Management Platform"
+  assemblyPhase: "Pending"
+  componentKinds:
+    - group: v1
+      kind: ConfigMap
+    - group: v1
+      kind: Secret
+    - group: v1
+      kind: Service
+    - group: apps/v1
+      kind: Deployment
+    - group: apps/v1
+      kind: StatefulSet
+EOF
+
+if [ $? -eq 0 ]; then
+    echo "Application resource pre-created successfully"
+else
+    echo "Failed to pre-create Application resource"
+    exit 1
+fi
+
+# Wait a moment for the Application to be registered
+sleep 2
 
 echo "=== Starting Helm-based Deployment ==="
 echo "Deployment handoff at: $(date)"
@@ -65,7 +110,8 @@ echo "Deployment handoff at: $(date)"
 if ! /bin/deploy.sh; then
     echo "Deployment failed at: $(date)"
     echo "=== Post-failure Diagnostics ==="
-    kubectl get events --sort-by='.lastTimestamp' -n "${NAMESPACE_TEST}" 2>&1 | tail -10 || echo "Events check failed"
+    kubectl get events --sort-by='.lastTimestamp' -n "${NAMESPACE}" 2>&1 | tail -20 || echo "Events check failed"
+    kubectl get pods -n "${NAMESPACE}" 2>&1 || echo "Pods check failed"
     exit 1
 fi
 
