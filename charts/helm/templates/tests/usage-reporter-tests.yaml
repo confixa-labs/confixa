@@ -13,95 +13,185 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   restartPolicy: Never
+  serviceAccountName: {{ .Values.usageReporter.name }}
+  
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  
   containers:
   - name: usage-reporter-test
     image: "{{ .Values.usageReporter.image.repository }}:{{ .Values.usageReporter.image.tag }}"
     imagePullPolicy: {{ .Values.usageReporter.image.pullPolicy }}
+    
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+        - ALL
+    
     command:
     - /bin/sh
     - -c
     - |
       echo "Starting usage reporter tests..."
       
-      # Test 1: Configuration validation
-      echo "Test 1: Configuration validation"
-      python3 usage-reporter.py status
-      if [ $? -eq 0 ]; then
-        echo "Configuration test passed"
+      # Test 1: Environment variables validation
+      echo "Test 1: Marketplace credentials from environment variables"
+      
+      if [ -n "$CONSUMER_ID" ] && [ -n "$ENTITLEMENT_ID" ] && [ -n "$REPORTING_KEY" ]; then
+        echo "All required environment variables are set"
+        echo "  - CONSUMER_ID length: ${#CONSUMER_ID} chars"
+        echo "  - ENTITLEMENT_ID length: ${#ENTITLEMENT_ID} chars"
+        echo "  - REPORTING_KEY length: ${#REPORTING_KEY} chars"
       else
-        echo "Configuration test failed"
+        echo "Missing required environment variables"
+        [ -z "$CONSUMER_ID" ] && echo "  Missing: CONSUMER_ID"
+        [ -z "$ENTITLEMENT_ID" ] && echo "  Missing: ENTITLEMENT_ID"
+        [ -z "$REPORTING_KEY" ] && echo "  Missing: REPORTING_KEY"
         exit 1
       fi
       
-      # Test 2: Payload format validation  
-      echo "Test 2: Payload format validation"
+      # Test 2: ConfigMap environment variables
+      echo "Test 2: Configuration from ConfigMap"
+      
+      if [ -n "$MARKETPLACE_PROJECT_ID" ] && [ -n "$MARKETPLACE_SERVICE_NAME" ]; then
+        echo "ConfigMap environment variables are set"
+        echo "  - Project ID: $MARKETPLACE_PROJECT_ID"
+        echo "  - Service Name: $MARKETPLACE_SERVICE_NAME"
+        echo "  - Metric Name: $METRIC_NAME"
+        echo "  - Plan ID: $PLAN_ID"
+      else
+        echo "Missing ConfigMap environment variables"
+        exit 1
+      fi
+      
+      # Test 3: Python script status check
+      echo "Test 3: Usage reporter configuration validation"
+      
+      python3 usage-reporter.py status > /tmp/status.json
+      if [ $? -eq 0 ]; then
+        echo "Configuration validation passed"
+        cat /tmp/status.json
+      else
+        echo "Configuration validation failed"
+        exit 1
+      fi
+      
+      # Test 4: Payload generation
+      echo "Test 4: Payload format validation"
+      
       python3 usage-reporter.py payload > /tmp/payload.json
       if [ $? -eq 0 ]; then
-        echo "Payload generation test passed"
+        echo "Payload generation passed"
         
         # Validate JSON structure
-        if grep -q "operations" /tmp/payload.json && grep -q "operationId" /tmp/payload.json; then
-          echo "Payload structure validation passed"
+        if grep -q "operations" /tmp/payload.json && \
+           grep -q "operationId" /tmp/payload.json && \
+           grep -q "consumerId" /tmp/payload.json && \
+           grep -q "metricValueSets" /tmp/payload.json; then
+          echo "Payload structure is valid"
+          echo "Sample payload:"
+          head -20 /tmp/payload.json
         else
           echo "Payload structure validation failed"
+          cat /tmp/payload.json
           exit 1
         fi
       else
-        echo "Payload generation test failed"
+        echo "Payload generation failed"
         exit 1
       fi
       
-      echo "All tests passed successfully!"
+      # Test 5: Service Account Key JSON validation
+      echo "Test 5: Service Account Key validation"
+      
+      # Try to parse REPORTING_KEY as JSON
+      echo "$REPORTING_KEY" > /tmp/service_account.json
+      if python3 -c "import json, sys; json.load(open('/tmp/service_account.json'))" 2>/dev/null; then
+        echo "REPORTING_KEY is valid JSON (direct)"
+      else
+        # Try base64 decoding first
+        echo "$REPORTING_KEY" | base64 -d > /tmp/service_account_decoded.json 2>/dev/null
+        if python3 -c "import json, sys; json.load(open('/tmp/service_account_decoded.json'))" 2>/dev/null; then
+          echo "REPORTING_KEY is valid JSON (base64 encoded)"
+        else
+          echo "REPORTING_KEY is not valid JSON"
+          exit 1
+        fi
+      fi
+      
+      # Test 6: Kubernetes API access
+      echo "Test 6: Kubernetes API access validation"
+      
+      if kubectl get namespaces > /dev/null 2>&1; then
+        echo "Can access Kubernetes API"
+      else
+        echo "Cannot access Kubernetes API"
+        echo "ServiceAccount may lack proper permissions"
+        exit 1
+      fi
+      
+      # Test 7: Check for running pods (service health check)
+      echo "Test 7: Service health check logic"
+      
+      RUNNING_PODS=$(kubectl get pods --all-namespaces --field-selector=status.phase=Running -o json 2>/dev/null | python3 -c "import json, sys; print(len(json.load(sys.stdin).get('items', [])))")
+      
+      if [ -n "$RUNNING_PODS" ]; then
+        echo "Can query running pods: $RUNNING_PODS pods found"
+      else
+        echo "Warning: Could not query pods (may affect service health detection)"
+      fi
+      
+      echo ""
+      echo "=========================================="
+      echo "All critical tests passed successfully!"
+      echo "=========================================="
       exit 0
     
-    # Environment variables for testing
-    env:
-    - name: ENTITLEMENT_ID
-      value: "test-entitlement-12345"
-    - name: CONSUMER_ID
-      value: "test-consumer-project"
-    - name: PLAN_ID
-      value: "{{ .Values.marketplace.planId }}"
-    - name: MARKETPLACE_PROJECT_ID
-      value: "{{ .Values.marketplace.projectId }}"
-    - name: MARKETPLACE_SERVICE_NAME
-      value: "{{ .Values.marketplace.serviceName }}"
-    - name: METRIC_NAME
-      value: "{{ .Values.marketplace.metricName }}"
-    - name: ENVIRONMENT
-      value: "{{ .Values.marketplace.environment }}"
-    - name: REGION
-      value: "{{ .Values.marketplace.region }}"
-    - name: USAGE_UNIT
-      value: "cluster"
-    - name: GOOGLE_APPLICATION_CREDENTIALS
-      value: "/var/secrets/google/key.json"
+    # Environment variables from ConfigMap
+    envFrom:
+    - configMapRef:
+        name: {{ .Values.usageReporter.name }}-config
     
-    # Volume mounts
+    # CRITICAL: Load credentials from marketplace secret (same as main deployment)
+    env:
+    - name: CONSUMER_ID
+      valueFrom:
+        secretKeyRef:
+          name: "{{ .Values.reportingSecret }}"
+          key: consumer-id
+    - name: ENTITLEMENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: "{{ .Values.reportingSecret }}"
+          key: entitlement-id
+    - name: REPORTING_KEY
+      valueFrom:
+        secretKeyRef:
+          name: "{{ .Values.reportingSecret }}"
+          key: reporting-key
+    - name: USAGE_REPORTER_TEST_MODE
+      value: "false"
+    
+    # Volume mounts - only need tmp for writable directory
     volumeMounts:
-    - name: service-account-test
-      mountPath: /var/secrets/google
-      readOnly: true
     - name: tmp-volume
       mountPath: /tmp
     
-    # Resource limits for test
     resources:
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 125m
+        memory: 256Mi
       limits:
         cpu: 250m
         memory: 512Mi
   
-  # Test volumes
+  # Volumes - only tmp volume needed
   volumes:
-  - name: service-account-test
-    secret:
-      secretName: {{ .Values.usageReporter.name }}-credentials
-      items:
-      - key: key.json
-        path: key.json
   - name: tmp-volume
     emptyDir: {}
 {{- end }}
