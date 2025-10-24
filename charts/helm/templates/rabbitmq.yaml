@@ -1,50 +1,172 @@
 {{- if .Values.rabbitmq.enable }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: confixa-rabbitmq
+  name: {{ .Values.rabbitmq.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.rabbitmq.name }}
 spec:
+  serviceName: {{ .Values.rabbitmq.service.name }}-headless
   replicas: 1
   selector:
     matchLabels:
-      app: confixa-rabbitmq
+      app: {{ .Values.rabbitmq.name }}
+      app.kubernetes.io/name: {{ .Values.rabbitmq.name }}
   template:
     metadata:
       labels:
-        app: confixa-rabbitmq
+        app: {{ .Values.rabbitmq.name }}
+        app.kubernetes.io/name: {{ .Values.rabbitmq.name }}
     spec:
+      serviceAccountName: {{ .Values.rabbitmq.name }}
       containers:
-      - name: rabbitmq
-        image: "{{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}"
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5672
-        - containerPort: 15672
-        env:
-        - name: RABBITMQ_DEFAULT_USER
-          value: {{ .Values.rabbitmq.auth.username }}
-        - name: RABBITMQ_DEFAULT_PASS
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.rabbitmq.auth.existingPasswordSecret }}
-              key: rabbitmq-password
-        - name: RABBITMQ_PLUGINS
-          value: "rabbitmq_management"
+        - name: {{ .Values.rabbitmq.containerName }}
+          image: "{{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}"
+          imagePullPolicy: {{ .Values.rabbitmq.image.pullPolicy }}
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: management
+            - containerPort: 4369
+              name: epmd
+            - containerPort: 9419
+              name: prometheus
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "{{ .Values.rabbitmq.auth.username }}"
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.rabbitmq.auth.existingPasswordSecret }}"
+                  key: "{{ .Values.rabbitmq.auth.secretPasswordKey }}"
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: RABBITMQ_NODENAME
+              value: "rabbit@$(MY_POD_NAME).{{ .Values.rabbitmq.service.name }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: RABBITMQ_USE_LONGNAME
+              value: "true"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/rabbitmq
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Values.rabbitmq.name }}-config
+  volumeClaimTemplates:
+    - metadata:
+        name: rabbitmq-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.rabbitmq.persistence.size }}
+{{- end }}
 ---
+{{- if .Values.rabbitmq.enable }}
+# Headless Service (required for StatefulSet)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.rabbitmq.service.name }}-headless
+  namespace: {{ .Release.Namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: {{ .Values.rabbitmq.name }}
+  ports:
+    - port: 5672
+      targetPort: 5672
+      name: amqp
+    - port: 15672
+      targetPort: 15672
+      name: management
+    - port: 4369
+      targetPort: 4369
+      name: epmd
+{{- end }}
+---
+{{- if .Values.rabbitmq.enable }}
+# Regular Service
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.rabbitmq.service.name }}
   namespace: {{ .Release.Namespace }}
 spec:
+  type: {{ .Values.rabbitmq.service.type }}
   selector:
-    app: confixa-rabbitmq
+    app: {{ .Values.rabbitmq.name }}
   ports:
-  - port: 5672
-    targetPort: 5672
-    name: amqp          # ADD THIS LINE
-  - port: 15672
-    targetPort: 15672
-    name: management    # ADD THIS LINE
+    - protocol: TCP
+      port: 5672
+      targetPort: 5672
+      name: amqp
+    - protocol: TCP
+      port: 15672
+      targetPort: 15672
+      name: management
+    - protocol: TCP
+      port: 9419
+      targetPort: 9419
+      name: prometheus
+{{- end }}
+---
+{{- if .Values.rabbitmq.enable }}
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.rabbitmq.name }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+---
+{{- if .Values.rabbitmq.enable }}
+# Role for endpoint reading
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.rabbitmq.name }}-endpoint-reader
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get"]
+{{- end }}
+---
+{{- if .Values.rabbitmq.enable }}
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.rabbitmq.name }}-endpoint-reader
+  namespace: {{ .Release.Namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.rabbitmq.name }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.rabbitmq.name }}-endpoint-reader
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+---
+{{- if .Values.rabbitmq.enable }}
+# ConfigMap for RabbitMQ configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.rabbitmq.name }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  rabbitmq.conf: |
+{{ .Values.rabbitmq.extraConfiguration | indent 4 }}
+  enabled_plugins: |
+    [rabbitmq_management,rabbitmq_prometheus].
 {{- end }}
