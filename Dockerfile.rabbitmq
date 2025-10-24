@@ -1,7 +1,15 @@
-FROM rabbitmq:4.1.4-management
+FROM rabbitmq:3.13-management
 
 # Update all packages to fix vulnerabilities  
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Enable required plugins
+RUN rabbitmq-plugins enable --offline rabbitmq_management rabbitmq_prometheus
+
+# Set default user and vhost (optional, for development)
+# ENV RABBITMQ_DEFAULT_USER=admin
+# ENV RABBITMQ_DEFAULT_PASS=admin
+# ENV RABBITMQ_DEFAULT_VHOST=/

@@ -1,11 +1,11 @@
 {
   "schemaVersion": "2.0.0",
   "name": "confixa",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Helm deployer for Confixa",
   "maintainer": "support@confixa.com",
   "labels": {
     "com.googleapis.cloudmarketplace.product.service.name": "services/confixa-new.endpoints.confixa-public.cloud.goog",
-    "com.googleapis.cloudmarketplace.product.version": "1.2.0"
+    "com.googleapis.cloudmarketplace.product.version": "1.2.2"
   }
 }

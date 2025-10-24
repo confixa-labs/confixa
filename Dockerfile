@@ -47,14 +47,14 @@ RUN chmod +x /bin/preprocess_values.sh
 # Add wrapper script that runs preprocessing before deployment
 COPY deploy_wrapper.sh /bin/deploy_wrapper.sh
 RUN chmod +x /bin/deploy_wrapper.sh
-  
+
 # Environment variables
 ENV WAIT_FOR_READY_TIMEOUT=1800
 ENV TESTER_TIMEOUT=1800
 
 # Required marketplace labels
 LABEL com.googleapis.cloudmarketplace.product.service.name="services/confixa-new.endpoints.confixa-public.cloud.goog"
-LABEL com.googleapis.cloudmarketplace.product.version="1.2.0"
+LABEL com.googleapis.cloudmarketplace.product.version="1.2.2"
 
 # Override entrypoint to use our wrapper
 ENTRYPOINT ["/bin/deploy_wrapper.sh"]
