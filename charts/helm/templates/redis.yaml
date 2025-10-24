@@ -1,44 +1,86 @@
 {{- if .Values.redis.enable }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ .Values.redis.service.name }}
+  name: {{ .Values.redis.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.redis.name }}
 spec:
+  serviceName: {{ .Values.redis.service.name }}-headless
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.redis.service.name }}
+      app: {{ .Values.redis.name }}
+      app.kubernetes.io/name: {{ .Values.redis.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.redis.service.name }}
+        app: {{ .Values.redis.name }}
+        app.kubernetes.io/name: {{ .Values.redis.name }}
     spec:
       containers:
-      - name: redis
-        image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 6379
-        {{- if .Values.redis.auth.enabled }}
-        command: ["sh", "-c"]
-        args: ["redis-server --requirepass $REDIS_PASSWORD"]
-        env:
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.redis.auth.existingSecret }}
-              key: redis-password
-        {{- end }}
+        - name: {{ .Values.redis.containerName }}
+          image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+          imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+          ports:
+            - containerPort: 6379
+              name: redis
+          {{- if .Values.redis.auth.enabled }}
+          command: ["sh", "-c"]
+          args: ["redis-server --requirepass $REDIS_PASSWORD --appendonly yes --dir /data"]
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.auth.existingSecret }}
+                  key: {{ .Values.redis.auth.secretPasswordKey }}
+          {{- end }}
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.redis.master.persistence.size }}
+{{- end }}
 ---
+{{- if .Values.redis.enable }}
+# Headless Service (required for StatefulSet)
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redis.service.name }}-headless
+  namespace: {{ .Release.Namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: {{ .Values.redis.name }}
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+{{- end }}
+---
+{{- if .Values.redis.enable }}
+# Regular Service
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.redis.service.name }}
+  namespace: {{ .Release.Namespace }}
 spec:
+  type: ClusterIP
   selector:
-    app: {{ .Values.redis.service.name }}
+    app: {{ .Values.redis.name }}
   ports:
-  - port: 6379
-    targetPort: 6379
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+      name: redis
 {{- end }}
