@@ -6,15 +6,19 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     git: https://github.com/confixa-labs/confixa.git
+  labels:
+    app.kubernetes.io/name: {{ .Values.apiGateway.issueCron.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ .Values.apiGateway.issueCron.name }}
+      app.kubernetes.io/name: {{ .Values.apiGateway.issueCron.name }}
   template:
     metadata:
       labels:
         app: {{ .Values.apiGateway.issueCron.name }}
+        app.kubernetes.io/name: {{ .Values.apiGateway.issueCron.name }}
     spec:
       containers:
         - name: {{ .Values.apiGateway.issueCron.containerName }}

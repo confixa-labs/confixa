@@ -4,16 +4,20 @@ kind: StatefulSet
 metadata:
   name: {{ .Values.mongodb.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.mongodb.name }}
 spec:
   serviceName: {{ .Values.mongodb.service.name }}
   replicas: 1
   selector:
     matchLabels:
       app: {{ .Values.mongodb.name }}
+      app.kubernetes.io/name: {{ .Values.mongodb.name }}
   template:
     metadata:
       labels:
         app: {{ .Values.mongodb.name }}
+        app.kubernetes.io/name: {{ .Values.mongodb.name }}
     spec:
       containers:
         - name: {{ .Values.mongodb.containerName }}

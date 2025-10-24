@@ -6,15 +6,19 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     {{- toYaml .Values.llmKumaApiGateway.annotations | nindent 4 }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.llmKumaApiGateway.name }}
 spec:
   replicas: {{ .Values.llmKumaApiGateway.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.llmKumaApiGateway.name }}
+      app.kubernetes.io/name: {{ .Values.llmKumaApiGateway.name }}
   template:
     metadata:
       labels:
         app: {{ .Values.llmKumaApiGateway.name }}
+        app.kubernetes.io/name: {{ .Values.llmKumaApiGateway.name }}
     spec:
       containers:
         - name: {{ .Values.llmKumaApiGateway.containerName }}

@@ -6,15 +6,19 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     {{- toYaml .Values.apiGateway.annotations | nindent 4 }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.apiGateway.name }}
 spec:
   replicas: {{ .Values.apiGateway.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.apiGateway.name }}
+      app.kubernetes.io/name: {{ .Values.apiGateway.name }} 
   template:
     metadata:
       labels:
         app: {{ .Values.apiGateway.name }}
+        app.kubernetes.io/name: {{ .Values.apiGateway.name }}
     spec:
       containers:
         - name: {{ .Values.apiGateway.containerName }}
