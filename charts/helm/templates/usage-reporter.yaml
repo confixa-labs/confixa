@@ -4,8 +4,11 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.usageReporter.name }}-config
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+    app.kubernetes.io/component: usage-reporter
 data:
-  # Marketplace configuration - matches Python script expectations
+  # Marketplace configuration (non-sensitive) - matches Python script expectations
   MARKETPLACE_PROJECT_ID: "{{ .Values.marketplace.projectId }}"
   MARKETPLACE_SERVICE_NAME: "{{ .Values.marketplace.serviceName }}"
   METRIC_NAME: "{{ .Values.marketplace.metricName }}"
@@ -16,15 +19,11 @@ data:
   # Usage configuration
   USAGE_UNIT: "cluster"
   
-  # REPORTING SECRET NAME - From marketplace
-  REPORTING_SECRET: "{{ .Values.reportingSecret }}"
-  
   # Logging
   LOG_LEVEL: "INFO"
 
----
-# NO LONGER CREATE CREDENTIALS SECRET - MARKETPLACE PROVIDES IT
-# The secret is automatically created by Google Cloud Marketplace with name from .Values.reportingSecret
+  # MongoDB details
+  MONGO_DATABASE: "{{ .Values.usageReporter.mongodb.database }}"
 
 ---
 apiVersion: v1
@@ -32,31 +31,40 @@ kind: ServiceAccount
 metadata:
   name: {{ .Values.usageReporter.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+    app.kubernetes.io/component: usage-reporter
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Values.usageReporter.name }}
+  name: {{ .Release.Name }}-{{ .Values.usageReporter.name }}-role
+  labels:
+    app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+    app.kubernetes.io/component: usage-reporter
 rules:
+# Read cluster metadata for usage reporting
 - apiGroups: [""]
-  resources: ["namespaces"]
-  verbs: ["get"]
-  resourceNames: ["kube-system"]  # Restricted to kube-system only for cluster ID detection
-- apiGroups: [""]
-  resources: ["pods"]
+  resources: ["namespaces", "nodes", "pods"]
   verbs: ["get", "list"]
-  # Allows checking pods across all namespaces for health monitoring
+# Read metrics if available
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["nodes", "pods"]
+  verbs: ["get", "list"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Values.usageReporter.name }}
+  name: {{ .Release.Name }}-{{ .Values.usageReporter.name }}-binding
+  labels:
+    app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+    app.kubernetes.io/component: usage-reporter
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Values.usageReporter.name }}
+  name: {{ .Release.Name }}-{{ .Values.usageReporter.name }}-role
 subjects:
 - kind: ServiceAccount
   name: {{ .Values.usageReporter.name }}
@@ -74,12 +82,14 @@ metadata:
     {{- with .Values.usageReporter.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.usageReporter.name }}
+    app.kubernetes.io/component: usage-reporter
 spec:
   schedule: "{{ .Values.usageReporter.schedule }}"
   successfulJobsHistoryLimit: {{ .Values.usageReporter.successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ .Values.usageReporter.failedJobsHistoryLimit }}
   concurrencyPolicy: {{ .Values.usageReporter.concurrencyPolicy }}
-  
   jobTemplate:
     metadata:
       labels:
@@ -117,25 +127,41 @@ spec:
                 drop:
                 - ALL
             
-            # Environment variables from ConfigMap
+            # Environment variables from ConfigMap (non-sensitive config)
             envFrom:
             - configMapRef:
                 name: {{ .Values.usageReporter.name }}-config
             
-            # MARKETPLACE CREDENTIALS - From reporting secret
+            # CRITICAL: Extract marketplace credentials from reporting secret
+            # Google Marketplace creates this secret with these specific keys
             env:
-            - name: REPORTING_SECRET_NAME
-              value: "{{ .Values.reportingSecret }}"
+            - name: CONSUMER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.reportingSecret }}"
+                  key: consumer-id
+            - name: ENTITLEMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.reportingSecret }}"
+                  key: entitlement-id
+            - name: REPORTING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.reportingSecret }}"
+                  key: reporting-key
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.usageReporter.name }}-secret"
+                  key: mongo-uri
             
-            # Volume mounts - MARKETPLACE SECRET MOUNT
+            # Volume mounts for writable temp directory
             volumeMounts:
-            - name: marketplace-reporting-secret
-              mountPath: /var/secrets/marketplace
-              readOnly: true
             - name: tmp-volume
               mountPath: /tmp
             
-            # Resource limits - FIXED: Now properly structured with nested values
+            # Resource limits - properly structured with nested values
             resources:
               requests:
                 memory: "{{ .Values.usageReporter.resources.requests.memory }}"
@@ -144,11 +170,8 @@ spec:
                 memory: "{{ .Values.usageReporter.resources.limits.memory }}"
                 cpu: "{{ .Values.usageReporter.resources.limits.cpu }}"
           
-          # Volumes - MARKETPLACE SECRET
+          # Volumes - only need tmp for writable directory
           volumes:
-          - name: marketplace-reporting-secret
-            secret:
-              secretName: "{{ .Values.reportingSecret }}"
           - name: tmp-volume
             emptyDir: {}
           
